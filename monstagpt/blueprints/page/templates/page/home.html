@@ -1,0 +1,27 @@
+{% extends 'layouts/app.html' %}
+
+{% block title %}App Market Data Made Easy{% endblock %}
+{% block meta_description %}The most comprehensive API for global app store data. 
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row text-center pb-5">
+      <div class="col-md-12">
+        <h2 class="h1">App Market Data Made Easy</h2>
+        <h3 class="font-weight-light text-muted mt-0 text-justify">
+          The most comprehensive API for global app store data. Access app data for all
+          Google Play and iOS App Store apps in 155 countries including 10 years of historical data.
+        </h3>
+      </div>
+    </div>
+    <div class="row text-center pt-5">
+      <div class="col-md-4">
+        <i class="fas fa-fw fa-5x fa-bullhorn text-primary"></i>
+        <h2>Something awesome</h2>
+        <p class="text-muted">Something awesome.</p>
+        <a href="{{ url_for('user.signup') }}" class="btn btn-outline-primary">Sign up</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

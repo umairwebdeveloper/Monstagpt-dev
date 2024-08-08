@@ -1,0 +1,54 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/items.html' as items %}
+{% import 'macros/form.html' as f with context %}
+{% block title %}Questions history{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        {{ f.search('admin.gpt_history') }}
+        <h2>Questions history</h2>
+        {% if questions.total == 0 %}
+          <p>No questions found.</p>
+        {% else %}
+          <table class="table mt-5">
+            <thead>
+            <tr>
+              <th>Date</th>
+              <th>User Email</th>
+              <th>Question</th>
+              <th>Answer</th>
+              <th>Prompt tokens</th>
+              <th>Completion tokens</th>
+              <th>Cost ($)</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for question in questions.items %}
+              <tr>
+                <td>
+                  <time class="js-from-now"
+                        data-datetime="{{ question.created_on }}">
+                    {{ question.created_on }}
+                  </time>
+                </td>
+                <td>{{ question.user.email  }}</td>
+                <td>{{ question.question }}</td>
+                <td>
+                  <span class="text-muted">{{ question.answer }}</span>
+                </td>
+                <td>{{ question.prompt_tokens }}</td>
+                <td>{{ question.completion_tokens }}</td>
+                <td>{{ ((question.total_cost|default(0))|float)|round(3) }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+
+          {{ items.paginate(questions) }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

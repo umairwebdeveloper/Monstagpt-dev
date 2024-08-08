@@ -1,0 +1,29 @@
+{% extends 'layouts/base.html' %}
+
+{% block header %}
+  <div class="text-center mt-5 mb-5">
+  <a href="{{ url_for('page.home') }}">
+    <img src="{{ static_url_for('static', filename='images/new_am_logo.png') }}"
+         class="img-fluid"
+         width="100" title="AppMonsta" alt="AppMonsta"/>
+  </a>
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <li class="list-inline-item">
+    <a href="{{ url_for('contact.index') }}">Contact</a>
+  </li>
+  <li class="list-inline-item">
+    <a href="{{ url_for('page.privacy') }}">Privacy Policy</a>
+  </li>
+  <li class="list-inline-item">
+    <a href="{{ url_for('page.terms') }}">Terms of Service</a>
+  </li>
+  <li class="list-inline-item">
+    <a href="{{ url_for('api.docs')}}">MonstaGPT API docs</a>
+  </li>
+  <li class="list-inline-item">
+    <a href="{{ url_for('api.appmonsta_docs')}}">AppMonsta API docs</a>
+  </li>
+{% endblock %}

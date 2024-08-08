@@ -1,0 +1,123 @@
+{% extends 'layouts/base.html' %}
+
+{% block header %}
+  <nav class="navbar navbar-expand-md navbar-light bg-light mb-5">
+    <div class="container">
+      <a href="{{ url_for('page.home') }}">
+        <img src="{{ static_url_for('static', filename='images/new_am_logo.png') }}"
+             class="img-fluid"
+             width="32" height="32" title="AppMonsta" alt="AppMonsta"/>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse"
+              data-target="#navbarCollapse"
+              aria-controls="navbarCollapse"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          {% if current_user.is_authenticated %}
+            {% if current_user.coins > 0 or current_user.role == 'vip': %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('gpt.main') }}">
+                <span class="badge badge-primary">Ask a Question</span>
+              </a>
+            </li>
+            {% else %}   
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('billing.purchase_coins') }}">
+                <span class="badge badge-primary">Buy Tokens</span>
+              </a>
+            </li>
+            {% endif %}
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="#">
+                <span class="badge badge-secondary">Placeholder</span>
+              </a>
+            </li> -->
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('billing.pricing') }}">
+                <span class="badge badge-primary">Pricing</span>
+              </a>
+            </li>
+          {% else %}
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('billing.pricing') }}">
+                <span class="badge badge-primary">Pricing</span>
+              </a>
+            </li> -->
+          {% endif %}
+        </ul>
+        <ul class="navbar-nav">
+          {% if current_user.role == 'admin' %}
+            <li>
+              {% include 'admin/_menu.html' %}
+            </li>
+          {% endif %}
+          {% if current_user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="https://contact.appmonsta.ai/Support" target="_blank" rel="noopener noreferrer">
+              <span class="badge badge-primary">Contact Support</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://status.openai.com/" target="_blank" rel="noopener noreferrer">
+              <span class="badge badge-primary">OpenAI Status</span>
+            </a>
+          </li>
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle"
+                 data-toggle="dropdown"
+                 role="button" aria-haspopup="true"
+                 aria-expanded="false"><i class="fas fa fa-fw fa-user"></i>
+                <span class="caret"></span></a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item "href="{{ url_for('user.settings') }}">
+                  Settings
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="{{ url_for('gpt.history') }}"
+                  class="dropdown-item">
+                   Question history
+                 </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{ url_for('user.logout') }}">
+                  Log out
+                </a>
+              </div>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('user.login') }}">
+                Log in
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('user.signup') }}">
+                Sign up
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block footer %}
+  <li class="list-inline-item">
+    <a href="{{ url_for('contact.index') }}">Contact</a>
+  </li>
+  <li class="list-inline-item">
+    <a href="{{ url_for('page.privacy') }}">Privacy Policy</a>
+  </li>
+  <li class="list-inline-item">
+    <a href="{{ url_for('page.terms') }}">Terms of Service</a>
+  </li>
+  <li class="list-inline-item">
+    <a href="{{ url_for('api.docs')}}">MonstaGPT API docs</a>
+  </li>
+  <li class="list-inline-item">
+    <a href="{{ url_for('api.appmonsta_docs')}}">AppMonsta API docs</a>
+  </li>
+{% endblock %}

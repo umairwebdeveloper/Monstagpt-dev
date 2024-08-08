@@ -1,0 +1,26 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/form.html' as f with context %}
+
+{% block title %}Free tokens request{% endblock %}
+{% block meta_description %}Use this form to request free tokens.{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2 card bg-light">
+        {% call f.form_tag('contact.free_tokens') %}
+          <h2 class="mt-2 mb-4">Describe your reason for requesting free tokens</h2>
+
+          {% call f.form_group(form.message,
+                               placeholder='The more we know, the easier it will be to help you',
+                               rows='12') %}
+          {% endcall %}
+
+          <button type="submit" class="btn btn-primary mb-3">
+            Send e-mail
+          </button>
+        {% endcall %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

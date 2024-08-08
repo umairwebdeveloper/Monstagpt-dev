@@ -1,0 +1,453 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/form.html' as f with context %}
+{% import 'billing/macros/billing.html' as billing with context %}
+
+{% block title %}Get AI insights from your data{% endblock %}
+{% block meta_description %}Sign up today to subscribe so you can begin to
+ask questions to AppMonsta data{% endblock %}
+
+{% block body %}
+<style>
+    /* Existing styles */
+    .container-top {
+    background-color: #AECDE2;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding-left: 8.3%;
+    padding-right: 5%;
+    margin-top: 0;
+    }
+
+    body, html {
+        height: 100%;
+    }
+
+    .container-fluid {
+        min-height: 100%;
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .flex-grow-1 {
+        flex-grow: 1;
+    }
+
+    .footer {
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .footer ul {
+        margin-bottom: 0;
+    }
+
+    .footer a {
+        color: #6c757d;
+    }
+
+    .footer a:hover {
+        color: #343a40;
+        text-decoration: none;
+    }
+
+
+    /* Page specific styles */
+    .plan-card {
+        border-color: #007BFF;
+    }
+
+    .token-count{
+        background: url("{{ url_for('static', filename='images/ticket_stubs.jpg') }}") no-repeat center;
+        background-size: 100%;
+        height: 100px; /* Height of the token area */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px; /* Font size for token number */
+        color: #333;
+    }
+
+    .faq-section {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+    }
+    .faq-title {
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+    .faq-question {
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+    }
+    .faq-icon {
+        font-size: 1.2em;
+    }
+
+    .check { color: #28a745; font-weight: bold; }
+    .not-included { color: #6c757d; }
+
+    .pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    }
+    .pricing-table th, .pricing-table td {
+        padding: 10px;
+        text-align: center;
+    }
+    .pricing-table tr:nth-child(even) {
+        background-color: #E7F0F5;
+    }
+    .pricing-table tr:nth-child(odd) {
+        background-color: #ffffff;
+    }
+    .pricing-table th:first-child, .pricing-table td:first-child {
+        text-align: left;
+        font-weight: bold;
+    }
+    .pricing-table .check-icon {
+        color: #28a745;
+    }
+    .pricing-table .dash-icon {
+        color: #6c757d;
+    }
+
+    .pricing-header {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 10px 5px;
+    }
+    .pricing-header th,
+    .pricing-header td {
+        border: none;
+        padding: 15px;
+        text-align: center;
+    }
+    .pricing-header th {
+        font-size: 1.2em;
+        font-weight: bold;
+        padding-bottom: 5px;
+    }
+    .pricing-header td {
+        background-color: #f8f9fa;
+        font-size: 1.1em;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .pricing-header .price {
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+    .pricing-header .period {
+        font-size: 0.8em;
+        color: #6c757d;
+        font-weight: normal;
+    }
+</style>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        {% include 'layouts/_sidebar.html' %}
+
+        <!-- Main content -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 bg-light d-flex flex-column" style="padding: 0px; min-height: 100vh;">
+            <div class="text-white mt-0">
+                {% include 'layouts/_topnav.html' %}
+            </div>
+
+            <div class="container-top text-white py-3 mb-4 mt-0">
+                <div class="blue-box ml-8 mr-8">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="heading text-dark">Unlock Gaming App Insights with AppMonsta AI</h1>
+                            <h2 class="subheading text-secondary">Data Science Evolved.</h2>
+                            <p>Unlock Gaming App Insights: Explore Gaming App Data from the Last 6 months seamlessly. Our AI product empowers you with intuitive natural language queries. Experience the efficiency of having your own data science team at your fingertips. Revolutionise your data analysis workflow.</p>
+                        </div>
+                        <div class="col-2 text-center">
+                            <img src="{{ static_url_for('static', filename='images/game-controller.svg') }}" alt="Game controller" class="img-fluid" style="width: 50%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-grow-1">
+                <div style="padding-left: 8.3%;">
+                    <h2>Ready to sign up?</h2>
+                </div>
+
+                <div class="card col-md-10 offset-md-1">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="table-responsive sticky-header mb-4">
+                                <table class="pricing-header">
+                                    <thead>
+                                        <tr>
+                                            {% for tier in pricing_data['tiers'] %}
+                                            <th>{{ tier }}</th>
+                                            {% endfor %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            {% for price in pricing_data['monthly_prices'] %}
+                                            <td>
+                                                {% if price == 'Contact Us' %}
+                                                    {{ price }}
+                                                {% else %}
+                                                    <span class="price">${{ price }}</span>
+                                                    <span class="period">/month</span>
+                                                {% endif %}
+                                            </td>
+                                            {% endfor %}
+                                        </tr>
+                                        <tr>
+                                            {% for tier in pricing_data['tiers'] %}
+                                            <td>
+                                                {% if tier == 'Enterprise' %}
+                                                    <a href="https://contact.appmonsta.ai/Support" class="btn btn-primary btn-sm">Contact Us</a>
+                                                {% else %}
+                                                    {% if current_user.is_authenticated and current_user.subscription %}
+                                                        <a href="{{ url_for('stripe_payments.stripe_customer_portal') }}" class="btn btn-primary btn-sm">Manage billing</a>
+                                                    {% else %}
+                                                        <button class="btn btn-primary btn-sm buy_now_btn" data-plan="{{ tier }}">
+                                                            Continue
+                                                        </button>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </td>
+                                            {% endfor %}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <div class="faq-container" id="pricingFAQ">
+                                  {% for product in pricing_data['products'] %}
+                                  <div class="faq-item">
+                                    <div class="faq-title faq-question mt-3 mb-3" data-toggle="collapse" data-target="#faq{{ loop.index }}" aria-expanded="{{ 'true' if loop.first else 'false' }}" aria-controls="faq{{ loop.index }}">
+                                      {{ product['name'] }}
+                                      <i class="faq-icon fas fa-plus-circle text-end"></i>
+                                    </div>
+                                    <div id="faq{{ loop.index }}" class="collapse {% if loop.first %}show{% endif %}">
+                                      <div class="faq-answer">
+                                        <div class="table-responsive">
+                                          <table class="pricing-table">
+                                            <thead>
+                                              <tr>
+                                                <th>Features</th>
+                                                {% for tier in pricing_data['tiers'] %}
+                                                <th>{{ tier }}</th>
+                                                {% endfor %}
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              {% for feature in product['features'] %}
+                                              <tr>
+                                                <td>{{ feature['name'] }}</td>
+                                                {% for value in feature['values'] %}
+                                                <td>
+                                                  {% if value == '✓' %}
+                                                  <i class="fas fa-check check-icon"></i>
+                                                  {% elif value == '—' %}
+                                                  <i class="fas fa-minus dash-icon"></i>
+                                                  {% else %}
+                                                  {{ value }}
+                                                  {% endif %}
+                                                </td>
+                                                {% endfor %}
+                                              </tr>
+                                              {% endfor %}
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card col-md-10 offset-md-1 mt-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="faq-section">
+                                    <div class="faq-item">
+                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq5" aria-expanded="false" aria-controls="faq1">
+                                            What is AppMonsta AI?
+                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                        </div>
+                                        <div id="faq5" class="collapse">
+                                            <div class="faq-answer">
+                                                AppMonsta AI is a GPT that empowers you to swiftly access a plethora of valuable analytics, including download data, review sentiment analysis, and much more. Say goodbye to the need for specialized data science teams or the hassle of storing vast datasets - AppMonsta's GPT puts the power of analytics directly into your hands.                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="faq-item">
+                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq6" aria-expanded="false" aria-controls="faq2">
+                                            What Does Beta Mean for AppMonsta AI?
+                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                        </div>
+                                        <div id="faq6" class="collapse">
+                                            <div class="faq-answer">
+                                                Our Beta program is your exclusive opportunity to experience firsthand our cutting-edge generative AI solution. During this stage, we eagerly invite all customer feedback, both positive and constructive, as it plays a pivotal role in refining our product for our public launch. Together, we aim to establish this as the industry's go-to solution.
+                                                Your feedback is invaluable to us, and to show our appreciation, we offer incentives such as additional free tokens for those who provide detailed feedback. Join us in shaping the future of AI innovation - together, we'll unlock endless possibilities!                    
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="faq-item">
+                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq7" aria-expanded="false" aria-controls="faq3">
+                                            What is a Token and how does it work?
+                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                        </div>
+                                        <div id="faq7" class="collapse">
+                                            <div class="faq-answer">
+                                                At AppMonsta, transparency is our hallmark. We've streamlined our pricing structure so that you're charged just 1 token per question asked. Unlike other AI tools, we don't penalize you based on the size of your question or reply. With us, what you see is what you get - straightforward pricing with no hidden fees.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="faq-item">
+                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq8" aria-expanded="false" aria-controls="faq4">
+                                            What should I do if an error occurs during a reply?
+                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                        </div>
+                                        <div id="faq8" class="collapse">
+                                            <div class="faq-answer">
+                                                At AppMonsta, we're dedicated to providing a seamless experience, but we understand that glitches can happen, especially during our Beta phase. If you encounter an error, simply reach out to our friendly support team. We're committed to addressing any issues highlighted in your feedback and ensuring your satisfaction. Our team will be more than happy to assist you in resolving the matter promptly. Your feedback helps us improve, so don't hesitate to get in touch!                                </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="faq-section">
+                                    <div class="faq-item">
+                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq9" aria-expanded="false" aria-controls="faq5">
+                                            Is there a Cancellation Fee?
+                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                        </div>
+                                        <div id="faq9" class="collapse">
+                                            <div class="faq-answer">
+                                                With MonstaGPT, there are no cancellation fees - it's that simple. Our pay-as-you-go service allows you to cancel anytime without any penalties. Once you’ve canceled, there will be no automatic renewal, giving you complete control over your subscription. Plus, you can continue using your remaining tokens for the duration of your term. Experience the freedom of choice with MonstaGPT today!                                </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="faq-item">
+                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq10" aria-expanded="false" aria-controls="faq6">
+                                            Can I upgrade/downgrade my subscription?
+                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                        </div>
+                                        <div id="faq10" class="collapse">
+                                            <div class="faq-answer">
+                                                Absolutely! You can easily upgrade your subscription to instantly access additional tokens and unlock more features. However, if you prefer to downgrade or cancel your subscription, these changes will take effect at the end of your current term. Enjoy the flexibility to tailor your subscription to your needs with ease.                                </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="faq-item">
+                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq11" aria-expanded="false" aria-controls="faq7">
+                                            What happens once the Beta Program ends?
+                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                        </div>
+                                        <div id="faq11" class="collapse">
+                                            <div class="faq-answer">
+                                                Following the conclusion of the AppMonsta GPT beta phase, you will remain on your current plan. However, you’ll have the flexibility to upgrade or downgrade your plan according to your preferences. Enjoy the continuity of service and the freedom to adjust your subscription to best suit your needs.                                </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="faq-item">
+                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq12" aria-expanded="false" aria-controls="faq8">
+                                            What Payment Options do you accept?
+                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                        </div>
+                                        <div id="faq12" class="collapse">
+                                            <div class="faq-answer">
+                                                We accept a variety of payment methods for your convenience, including
+                                                Visa, Mastercard, American Express and Discover. All payments are in USD                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <p> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="footer mt-auto py-3 bg-light">
+                <div class="container">
+                    <ul class="list-inline text-center mb-0">
+                        <li class="list-inline-item text-muted">
+                            AppMonsta &copy; {{ current_year() }}
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('contact.index') }}">Contact</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('page.privacy') }}">Privacy Policy</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('page.terms') }}">Terms of Service</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('api.docs')}}">MonstaGPT API docs</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('api.appmonsta_docs')}}">AppMonsta API docs</a>
+                        </li>
+                    </ul>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+</div>
+
+
+<script>
+    const buttons = document.querySelectorAll('.buy_now_btn');
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    buttons.forEach(button => {
+        button.addEventListener('click', event => {
+            const plan = button.getAttribute('data-plan');
+
+            fetch('/stripe/buy_gpt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ plan: plan })
+            })
+            .then((result) => { return result.json(); })
+            .then((data) => {
+                var stripe = Stripe(data.checkout_public_key);
+                stripe.redirectToCheckout({
+                    sessionId: data.checkout_session_id
+                }).then(function (result) {
+                    // If `redirectToCheckout` fails due to a browser or network
+                    // error, display the localized error message to your customer
+                    // using `result.error.message`.
+                });
+            });
+        });
+    });
+    </script>
+    <script src="https://js.stripe.com/v3/"></script>
+{% endblock %}

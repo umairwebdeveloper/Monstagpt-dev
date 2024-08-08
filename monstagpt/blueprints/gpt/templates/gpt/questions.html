@@ -1,0 +1,169 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/form.html' as f with context %}
+
+{% block title %}Ask questions about app data{% endblock %}
+{% block meta_description %}Use our advanced ai tools to query app data{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h2 class="text-center">{{ conversation }} </h2>
+    <hr>
+  <div class="row">
+    <div class="col-md-5">
+      <form>
+        <h2 class="text-warning">
+        You have <strong id="user_coins">{{ current_user.coins }}</strong> tokens left
+        </h2>
+        <div class="form-group">
+          <label for="question"><strong>Question</strong></label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">
+                <i class="fas fa-fw fa-rocket"></i>
+              </div>
+            </div>
+            <input type="text" class="form-control"
+                  id="questionInput" name="questionInput"
+                  placeholder="Ask your question here">
+                  <input type="hidden" name="conversation" value="{{ conversation }}">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          <img src="{{ static_url_for('static', filename='images/spinner.gif') }}"
+              class="spinner"
+              width="16" height="11" alt="Spinner"/>
+          Ask Question
+        </button>
+        <div id="message" class="alert alert-info text-center"></div>
+        <div id="outcome" class="alert alert-info text-center"></div>
+        <div id="timer" class="alert alert-info text-center"></div>
+        
+        <hr/>
+        <div class="text-center">
+          <a href="{{ url_for('billing.purchase_coins') }}"
+            class="btn btn-outline-primary">Buy more tokens</a>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-7 ">
+      <div id="recent_questions">
+        <h2>Recent Questions</h2>
+        <table class="table mt-5">
+          <thead>
+          </thead>
+          {% if recent_questions.count() == 0 %}
+            <tbody>
+            </tbody>
+          {% else %}
+            <tbody>
+              {% for question in recent_questions %}
+              <tr>
+                <td><strong>Question: </strong>{{ question.question }} <strong>Answer:</strong> <span class="text-muted">{{ question.answer }}</span>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          {% endif %}
+        </table>
+        <a href="{{ url_for('gpt.history') }}">
+          <span class="btn btn-outline-secondary">
+            View full question history
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+var userCoins = $('#user_coins');
+var $messageStatus = $('#message');
+var $responseStatus = $('#outcome');
+var recentQuestionsSelector = '#recent_questions';
+$(document).ready(function() {
+  t = 0;
+  $messageStatus.hide();
+  $responseStatus.hide();
+  $('#timer').hide();
+  $('form').on('submit',function(event) {
+    $messageStatus.hide();
+    $responseStatus.hide();
+    function myTimer() {
+      $("#timer").html("<p>Waiting for response ... " + t + "s</p>").show();
+      t++;
+    }
+    const myInterval = setInterval(myTimer, 1000);
+    $.ajax({
+      headers: {"X-CSRFToken": $('meta[name=csrf-token]').attr('content')},
+      data: {
+        question: $('#questionInput').val(),
+        conversation: $('input[name="conversation"]').val(),
+      },
+      type : 'POST',
+      url :  '/gpt/ask_questions'
+    }).done(function(data){
+      if (data.error) {
+        var status_class = 'alert-error';
+        var $outcomeStatus = $('#outcome');
+        $('#outcome').text(data.error).show();
+        $outcomeStatus.addClass(status_class).text(data.error).show();
+        clearInterval(myInterval);
+        t = 0;
+      }
+      else {
+        var taskId = data.task_id;
+        var intervalId = setInterval(function() {
+          $.getJSON('/gpt/result/' + taskId, function(data) {
+            if (data.status == 'PENDING') {
+              console.log("Task is pending...");
+            }
+            else if (data.state == 'SUCCESS') {
+              clearInterval(intervalId);
+              var response = data.result.response;  // response from the task
+              var coins = data.result.coins;  // updated coins
+              userCoins.text(coins);
+              $(recentQuestionsSelector).show();
+              
+              var questionAsked = $('#questionInput').val();  // getting the asked question from the input
+              var recentQuestion = '<tr><td><strong>Question: </strong>' + questionAsked + ' <strong>Answer:</strong> <span class="text-muted">' + response + '</span> </tr></td>';
+              var recentQuestionCount = $(recentQuestionsSelector + ' tr').length;
+
+              $(recentQuestionsSelector + ' tbody').prepend(recentQuestion);
+              if (recentQuestionCount > 10) {
+                $(recentQuestionsSelector + ' tr:last').remove();
+              }
+              message_status_class = '<i class="fa fa-exclamation-circle"></i> Success!';
+              message_status_text = "Here's your response!";
+              $messageStatus.addClass(message_status_class).text(message_status_text).show();
+              response_status_class = 'alert-info';
+              response_status_text = response;
+              $responseStatus.addClass(response_status_class).text(response_status_text).show();
+              clearInterval(myInterval);
+              t = 0;
+            }
+            else if (data.state == 'FAILURE') {
+              clearInterval(intervalId);
+              message_status_class = '<i class="fa fa-exclamation-circle"></i> Success!';
+              message_status_text = "Here's your response!";
+              $messageStatus.addClass(message_status_class).text(message_status_text).show();
+              response_status_class = 'alert-info';
+              response_status_text = 'There was an error processing the question, please try again';
+              $responseStatus.addClass(response_status_class).text(response_status_text).show();
+              clearInterval(myInterval);
+              t = 0;
+            }
+          
+
+
+          });
+        }, 1000);
+      }
+    });
+    event.preventDefault();
+  });
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 56px;
+        }
+        .container-fluid {
+            display: flex;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 56px; /* Height of navbar */
+            width: 250px; /* Adjust the width as necessary */
+            height: calc(100vh - 56px); /* Adjust height to take the navbar height into account */
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .content {
+            margin-left: 270px; /* Adjust based on the sidebar width + padding */
+            padding: 20px;
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .code-examples {
+
+            position: fixed;
+            right: 0;
+            top: 56px; /* Height of navbar */
+            width: 300px; /* Adjust width as necessary */
+            height: calc(100vh - 56px); /* Adjust height to take the navbar height into account */
+            overflow-y: auto;
+            padding: 20px;
+            border-left: 1px solid #ccc;
+        }
+        .code-examples pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .nav-link.active {
+            background-color: #f0f0f0;
+        }
+        .tablinks.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Base styles for aside elements */
+.content aside {
+    padding: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    line-height: 1.6;
+}
+
+/* Styles for the icons/symbols before the text content */
+.content aside:before {
+    vertical-align: middle;
+    padding-right: 0.5em;
+    font-size: 14px; /* Adjust as needed */
+}
+
+/* Specific styles for warnings */
+.content aside.warning {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    color: #856404;
+}
+
+.content aside.warning:before {
+    content: "\26A0"; /* Example: Unicode for a warning sign */
+    /* You might need to adjust the content value based on the icons you have */
+}
+
+/* Specific styles for notices */
+.content aside.notice {
+    background-color: #e7f3fe;
+    border-color: #b8daff;
+    color: #004085;
+}
+
+.content aside.notice:before {
+    content: "\2139"; /* Example: Unicode for an info sign */
+    /* Adjust the content value as needed */
+}
+
+/* Specific styles for success messages (added for completeness) */
+.content aside.success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.content aside.success:before {
+    content: "\2713"; /* Example: Unicode for a check mark */
+    /* Adjust accordingly */
+}
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">API Documentation</a>
+    </nav>
+    <div class="container-fluid">
+        <div class="sidebar bg-light">
+            <h4>API Sections</h4>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="#introduction">Introduction</a>
+                    <ul class="nav flex-column ml-3">
+                        <li class="nav-item"><a class="nav-link" href="#quick-overview">Quick Overview</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#compression">Compression</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#authentication">Authentication</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#errors">Errors</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#platform-specific-fields">Platform specific fields</a></li>
+                        
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#app-rankings">App rankings</a>
+                    <ul class="nav flex-column ml-3">
+                        <li class="nav-item"><a class="nav-link" href="#general-rankings">General rankings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#aggregated-rankings">Aggregated rankings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#ranking-genres">Ranking genres</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#ranking-list-types">Ranking list types</a></li>
+                        
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="#Test1-rankings">Test1 Rankings</a></li>
+                <li class="nav-item"><a class="nav-link" href="#Test2-rankings">Test2 Rankings</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2 id="introduction">Introduction</h2>
+            <p>AppEverything API gives you access to:</p>
+
+                <ul>
+                <li><a href="https://appmonsta.com/dashboard/api-documentation/#rankings">Rankings</a>: Apps that show up on ranking lists (ie. Overall, Top Grossing, etc).</li>
+                <li><a href="https://appmonsta.com/dashboard/api-documentation/#details-for-a-single-app">Details</a>:  Basic data about each app (data on the app description page). Get data about single app or all apps with one API call.</li>
+                <li><a href="https://appmonsta.com/dashboard/api-documentation/#reviews-for-all-apps">Reviews</a>: User reviews associated with each app.</li>
+                <li>And more.</li>
+                </ul>
+
+                <aside class="notice">
+                You need to get an API key before you can use our API. It's free and you can grab it
+                <a href="https://appmonsta.com/dashboard/get_api_key_form/"> here </a>.<br>
+                Complete access to this API is available via monthly subscription.
+                <a href="https://appmonsta.com/support"> Contact us </a> for pricing and details or try out limited access
+                for free.
+                </aside>
+
+                <aside class="warning">
+                Free API key gives you limited access. For single app record calls the limit is 50 hits per day and for
+                bulk calls you get the first 50 records per call.
+                </aside>
+            <h2 id="quick-overview">Quick Overview</h2>
+        
+                <p>A few quick details about our REST API:</p>
+                
+                <table><thead>
+                <tr>
+                <th>Type</th>
+                <th>Description</th>
+                </tr>
+                </thead><tbody>
+                <tr>
+                <td><strong>SSL only</strong></td>
+                <td>We require that all requests are done over SSL.</td>
+                </tr>
+                <tr>
+                <td><strong>UTF-8 encoding</strong></td>
+                <td>We use UTF-8 everywhere.</td>
+                </tr>
+                <tr>
+                <td><strong>Method</strong></td>
+                <td><code>GET</code> for all read calls, <code>PUT</code> to submit a new app.</td>
+                </tr>
+                <tr>
+                <td><strong>Version number</strong></td>
+                <td>The current version of our API is v1.</td>
+                </tr>
+                <tr>
+                <td><strong>Multi-records format</strong></td>
+                <td>JSON dictionaries separated by newlines also known as JSON Lines (JSONL).</td>
+                </tr>
+                <tr>
+                <td><strong>Date format</strong></td>
+                <td>All dates in the API are strings in the following format: <code>YYYY-MM-DD</code>.</td>
+                </tr>
+                <tr>
+                <td><strong>Error handling</strong></td>
+                <td>Errors are returned using <a href="https://appmonsta.com/dashboard/api-documentation/#errors">listed HTTP error codes</a>.</td>
+                </tr>
+                <tr>
+                <td><strong>Bulk API requests</strong></td>
+                <td>Bulk API requests return request ID to validate request:</td>
+                </tr>
+                <tr>
+                <td></td>
+                <td>Request ID is sent via <code>X-Request-ID</code> HTTP Header. You may get the status of request using Request Status API.</td>
+                </tr>
+                </tbody></table>
+            
+
+            <h2 id="compression">Compression</h2>
+                <p>Our REST API allows the use of compression on the request and the response, using the standards
+                defined by the HTTP 1.1 specification. Some clients will automatically use compression but for
+                some it has to be turned on manually.</p>
+                
+                <aside class="success">
+                Turning on compression can result in speed and size savings of up to 4X.
+                </aside>
+                
+                <p>To use compression make sure your requests to our API include the following header
+                <code>Accept-Encoding: gzip</code>. Our API will compress the response if this header is specified. For more
+                information on how to add this header refer to code examples below.</p>
+                
+            <h2 id="authentication">Authentication</h2>
+                <p>Requests to the REST API are protected with HTTP Basic authentication. You must provide your API
+                    key to each request made against our API. You can always get a new one <a href="https://appmonsta.com/dashboard/get_api_key_form/"> here </a>.
+                    If you lost your key you can just enter your email again and we will retrieve it for you.</p>
+                    
+                    <aside class="warning">
+                    Requests have to use HTTPS. Using HTTP will return 400 error response.
+                    </aside>
+            
+
+            <h2 id="errors">Errors</h2>
+                <p>The API uses the following error codes:</p>
+                
+                <table><thead>
+                <tr>
+                <th>Error Code</th>
+                <th>Meaning</th>
+                </tr>
+                </thead><tbody>
+                <tr>
+                <td><strong>400</strong></td>
+                <td>Bad input parameter or malformed request. The error message should indicate what is specifically wrong.</td>
+                </tr>
+                <tr>
+                <td><strong>401</strong></td>
+                <td>Missing or bad API key (email datageeks[at]appmonsta.com if you need a new API key).</td>
+                </tr>
+                <tr>
+                <td><strong>403</strong></td>
+                <td>You're requesting something your subscription doesn't cover (email datageeks[at]appmonsta.com if you'd like to change your subscription).</td>
+                </tr>
+                <tr>
+                <td><strong>404</strong></td>
+                <td>The data isn't available yet. This may be because we're still collecting it.</td>
+                </tr>
+                <tr>
+                <td><strong>429</strong></td>
+                <td>You've exceeded the rate limit for the API you're trying to access. Wait a little or contact datageeks[at]appmonsta.com.</td>
+                </tr>
+                <tr>
+                <td><strong>500</strong></td>
+                <td>Something went wrong on our end. Email us at datageeks[at]appmonsta.com with the details of your API request, and we'll troubleshoot it ASAP.</td>
+                </tr>
+                </tbody></table>
+                
+                <h2 id="platform-specific-fields">Platform Specific Fields</h2>
+                    <p>Some of the fields are limited to only a particular platform (either Google Play or App Store).
+                    In that case we tag the field description with the appropriate icon:</p>
+                    
+                    <table><thead>
+                    <tr>
+                    <th>Icon</th>
+                    <th>Meaning</th>
+                    </tr>
+                    </thead><tbody>
+                    <tr>
+                    <td><img src="./Introduction – AppMonsta API Reference_files/android_logo.jpg" alt="android_only"></td>
+                    <td>Field available only for Android apps.</td>
+                    </tr>
+                    <tr>
+                    <td><img src="./Introduction – AppMonsta API Reference_files/itunes_logo.jpg" alt="itunes_only"></td>
+                    <td>Field available only for iOS apps.</td>
+                    </tr>
+                    </tbody></table>
+
+            <h2 id="app-rankings">App Rankings</h2>
+            <p>General Rankings API dfqfefewqfescription...</p>
+            <h2 id="general-rankings">General rankings</h2>
+            <p>Request all rankings by date and by country. This call returns ranking records with all the available meta-data from the store's ranking list page.
+                The following countries are supported (outside of these countries we only get data for “Overall” category):</p>
+                <p><code>AO</code>, <code>AI</code>, <code>AL</code>, <code>AE</code>, <code>AR</code>, <code>AM</code>, <code>AG</code>, <code>AU</code>, <code>AT</code>, <code>AZ</code>, <code>BE</code>,
+                    <code>BJ</code>, <code>BF</code>, <code>BG</code>, <code>BH</code>, <code>BS</code>, <code>BY</code>, <code>BZ</code>, <code>BM</code>, <code>BO</code>, <code>BR</code>, <code>BB</code>,
+                    <code>BN</code>, <code>BT</code>, <code>BW</code>, <code>CA</code>, <code>CH</code>, <code>CL</code>, <code>CN</code>, <code>CG</code>, <code>CO</code>, <code>CV</code>, <code>CR</code>,
+                    <code>KY</code>, <code>CY</code>, <code>CZ</code>, <code>DE</code>, <code>DM</code>, <code>DK</code>, <code>DO</code>, <code>DZ</code>, <code>EC</code>, <code>EG</code>, <code>ES</code>,
+                    <code>EE</code>, <code>FI</code>, <code>FJ</code>, <code>FR</code>, <code>FM</code>, <code>GB</code>, <code>GH</code>, <code>GM</code>, <code>GW</code>, <code>GR</code>, <code>GD</code>,
+                    <code>GT</code>, <code>GY</code>, <code>HK</code>, <code>HN</code>, <code>HR</code>, <code>HU</code>, <code>ID</code>, <code>IN</code>, <code>IE</code>, <code>IS</code>, <code>IL</code>,
+                    <code>IT</code>, <code>JM</code>, <code>JO</code>, <code>JP</code>, <code>KZ</code>, <code>KE</code>, <code>KG</code>, <code>KH</code>, <code>KN</code>, <code>KR</code>, <code>KW</code>,
+                    <code>LA</code>, <code>LB</code>, <code>LR</code>, <code>LC</code>, <code>LK</code>, <code>LT</code>, <code>LU</code>, <code>LV</code>, <code>MO</code>, <code>MD</code>, <code>MG</code>,
+                    <code>MX</code>, <code>MK</code>, <code>ML</code>, <code>MT</code>, <code>MN</code>, <code>MZ</code>, <code>MR</code>, <code>MS</code>, <code>MU</code>, <code>MW</code>, <code>MY</code>,
+                    <code>NA</code>, <code>NE</code>, <code>NG</code>, <code>NI</code>, <code>NL</code>, <code>NO</code>, <code>NP</code>, <code>NZ</code>, <code>OM</code>, <code>PK</code>, <code>PA</code>,
+                    <code>PE</code>, <code>PH</code>, <code>PW</code>, <code>PG</code>, <code>PL</code>, <code>PT</code>, <code>PY</code>, <code>QA</code>, <code>RO</code>, <code>RU</code>, <code>SA</code>,
+                    <code>SN</code>, <code>SG</code>, <code>SB</code>, <code>SL</code>, <code>SV</code>, <code>ST</code>, <code>SR</code>, <code>SK</code>, <code>SI</code>, <code>SE</code>, <code>SZ</code>,
+                    <code>SC</code>, <code>TC</code>, <code>TD</code>, <code>TH</code>, <code>TJ</code>, <code>TM</code>, <code>TT</code>, <code>TN</code>, <code>TR</code>, <code>TW</code>, <code>TZ</code>,
+                    <code>UG</code>, <code>UA</code>, <code>UY</code>, <code>US</code>, <code>UZ</code>, <code>VC</code>, <code>VE</code>, <code>VG</code>, <code>VN</code>, <code>YE</code>, <code>ZA</code>,
+                    <code>ZW</code></p>
+                    <h3 id="https-request">HTTPS Request</h3>
+                    <p><code>GET https://api.appmonsta.com/v1/stores/&lt;store&gt;/rankings.json?country=&lt;country_code&gt;&amp;date=&lt;date&gt;</code></p>
+                    <h3 id="request-parameters">Request Parameters</h3>
+                    <table><thead>
+                    <tr>
+                    <th>Parameter</th>
+                    <th>Required</th>
+                    <th>Value</th>
+                    </tr>
+                    </thead><tbody>
+                    <tr>
+                    <td><strong>store</strong></td>
+                    <td>Yes</td>
+                    <td><code>android</code> or <code>itunes</code>.</td>
+                    </tr>
+                    <tr>
+                    <td><strong>country_code</strong></td>
+                    <td>Yes</td>
+                    <td>The two letter country code of any country you've subscribed to.</td>
+                    </tr>
+                    <tr>
+                    <td></td>
+                    <td></td>
+                    <td>E.g.: <code>US</code>, <code>DE</code>, <code>AU</code>, <code>FR</code>, <code>GB</code>, <code>HK</code>, etc.</td>
+                    </tr>
+                    <tr>
+                    <td><strong>date</strong></td>
+                    <td>Yes</td>
+                    <td>In the following format: <code>YYYY-MM-DD</code>.</td>
+                    </tr>
+                    </tbody></table>
+                    <h3 id="response-fields">Response Fields</h3>
+                    <table><thead>
+                    <tr>
+                    <th>Field</th>
+                    <th>Description</th>
+                    </tr>
+                    </thead><tbody>
+                    <tr>
+                    <td><strong>app_id</strong></td>
+                    <td>The app ID of the app.</td>
+                    </tr>
+                    <tr>
+                    <td><strong>app_name</strong></td>
+                    <td>The name of the app.</td>
+                    </tr>
+                    <tr>
+                    <td><strong>avg_rating</strong></td>
+                    <td>An average of the individual ratings, based on a 1-5 scale. <img src="./Introduction – AppMonsta API Reference_files/android_logo.jpg" alt="android_only"></td>
+                    </tr>
+                    <tr>
+                    <td><strong>country</strong></td>
+                    <td>The country this ranking list is for; 2 letter country code.</td>
+                    </tr>
+                    <tr>
+                    <td><strong>icon_url</strong></td>
+                    <td>The url of the app icon.</td>
+                    </tr>
+                    <tr>
+                    <td><strong>price</strong></td>
+                    <td>The price of the app, if it can be scraped from the ranking list.</td>
+                    </tr>
+                    <tr>
+                    <td><strong>publisher_id</strong></td>
+                    <td>The ID of the publisher of this app as assigned by the store.</td>
+                    </tr>
+                    <tr>
+                    <td><strong>publisher_name</strong></td>
+                    <td>The display name of the publisher of this app.</td>
+                    </tr>
+                    <tr>
+                    <td><strong>rank</strong></td>
+                    <td>The numerical rank of this app in the given ranking list. Ie, the first app in the list would have 1 for this field, second app would have 2, etc.</td>
+                    </tr>
+                    <tr>
+                    <td><strong>rank_list</strong></td>
+                    <td>The identifier of which ranking list this is for. We try and use whatever identifier the store uses when possible. If not, we use the display name of the ranking list from the store.</td>
+                    </tr>
+                    <tr>
+                    <td><strong>timestamp</strong></td>
+                    <td>Date/hour when ranking was last updated.</td>
+                    </tr>
+                    </tbody></table>
+                    <h3 id="response-headers">Response Headers</h3>
+                    <table><thead>
+                    <tr>
+                    <th>Header</th>
+                    <th>Description</th>
+                    </tr>
+                    </thead><tbody>
+                    <tr>
+                    <td><strong>X-Request-ID</strong></td>
+                    <td>The ID of the request to validate via <a href="https://appmonsta.com/dashboard/api-documentation/#get-request-status">Request Status API</a>.</td>
+                    </tr>
+                    </tbody></table>
+                    
+                    <aside class="notice">
+                    This is a bulk API call. Bulk API calls return one record per line.
+                    </aside>
+        </div>
+        <div class="code-examples bg-light">
+            <h4>Code Examples</h4>
+            <div class="tab">
+                <button class="tablinks">Curl</button>
+                <button class="tablinks">Ruby</button>
+                <button class="tablinks">Python</button>
+                <button class="tablinks">Java</button>
+                <button class="tablinks">PHP</button>
+            </div>
+            <div id="codeExample"></div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const codeExamples = {
+                "Introduction": {
+                    "Curl": `curl --compressed -u "{API_KEY}:X" "https://api.example.com/v1/introduction"`,
+                    "Python": `import requests
+                    response = requests.get("https://api.example.com/v1/introduction",
+                                            auth=("{API_KEY}", "X"))
+                    print(response.text)`,
+                                "PHP": `<?php
+                    $curl = curl_init();
+                    curl_setopt($curl, CURLOPT_URL, "https://api.example.com/v1/introduction");
+                    curl_setopt($curl, CURLOPT_USERPWD, "{API_KEY}:X");
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                    $result = curl_exec($curl);
+                    curl_close($curl);
+                    echo $result;
+                    ?>`
+                            },
+                            "General rankings": {
+                                "Curl": `Don't forget to replace {API_KEY} with your actual API key
+                                curl --compressed -u "{API_KEY}:X" \
+                                "https://api.appmonsta.com/v1/stores/android/rankings.json?date=2024-03-21&country=US"
+                                The above code loads one JSON per line and prints it out:
+                                {
+                                "rank_list": "apps_movers_shakers-ANDROID_WEAR",
+                                "app_name": "Robinhood: Invest in Stock, Crypto, ETF & Coin",
+                                "timestamp": "2018-10-01 17:13:59",
+                                "country": "US",
+                                "price": "Free",
+                                "app_id": "com.robinhood.android",
+                                "rank": 1,
+                                "publisher_id": "Robinhood",
+                                "icon_url": "https://lh3.googleusercontent.com/LvWOyUYOe8xovqUdbIoMCIUnqoW2gInudnwzczSFsCAvP20BqKTFZHWBdTl_j9WdPBPW=w170-rw",
+                                "publisher_name": "Robinhood",
+                                "avg_rating": "4.6"
+                                }`,
+                                "Python": `import requests
+                    response = requests.get("https://api.example.com/v1/general_rankings",
+                                            auth=("{API_KEY}", "X"))
+                    print(response.text)`,
+                                "PHP": `<?php
+                    $curl = curl_init();
+                    curl_setopt($curl, CURLOPT_URL, "https://api.example.com/v1/general_rankings");
+                    curl_setopt($curl, CURLOPT_USERPWD, "{API_KEY}:X");
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                    $result = curl_exec($curl);
+                    curl_close($curl);
+                    echo $result;
+                    ?>`
+                            },
+                            "generqweqweal Rankings": {
+                                "Curl": `<p>Don't forget to replace <code>{API_KEY}</code> with your actual API key.</p>
+                                curl --compressed -u "{API_KEY}:X" \
+     "https://api.appmonsta.com/v1/stores/android/rankings.json?date=2024-03-21&country=US"`,
+                                "Python": `import requests
+                    response = requests.get("https://api.example.com/v1/aggregated_rankings",
+                                            auth=("{API_KEY}", "X"))
+                    print(response.text)`,
+                                "PHP": `<?php
+                    $curl = curl_init();
+                    curl_setopt($curl, CURLOPT_URL, "https://api.example.com/v1/aggregated_rankings");
+                    curl_setopt($curl, CURLOPT_USERPWD, "{API_KEY}:X");
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                    $result = curl_exec($curl);
+                    curl_close($curl);
+                    echo $result;
+                    ?>`
+                }
+                // Add more sections and languages as needed
+            };
+
+            function changeCodeExamples(section, language) {
+                const codeExampleDiv = document.getElementById("codeExample");
+                codeExampleDiv.innerHTML = ''; // Clear existing content
+                
+                // Ensure the section and language exist in the codeExamples object
+                if (codeExamples[section] && codeExamples[section][language]) {
+                    const codeSnippet = document.createElement("pre");
+                    codeSnippet.textContent = codeExamples[section][language];
+                    codeExampleDiv.appendChild(codeSnippet);
+                } else {
+                    codeExampleDiv.innerHTML = '<p>No example available for this section.</p>'; // Fallback content
+                }
+            }
+
+            function setActiveNavLink(sectionId) {
+                // Clear active class from all nav links
+                document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+
+                // Add the active class to the link that has the corresponding href
+                let targetLink = document.querySelector(`.sidebar .nav-link[href="#${sectionId}"]`);
+                if (targetLink) {
+                    targetLink.classList.add('active');
+                }
+            }
+
+    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+        link.addEventListener('click', function(event) {
+            // Prevent default behavior of the anchor
+            event.preventDefault();
+
+            // Extract the target section ID from the href attribute
+            const sectionId = this.getAttribute('href').substring(1);
+            
+            // Find the corresponding section in the content area
+            const section = document.getElementById(sectionId);
+
+            if (section) {
+                // Scroll to the section smoothly
+                section.scrollIntoView({ behavior: 'smooth' });
+
+                // Update the active class for the clicked link
+                setActiveNavLink(sectionId);
+
+                // Assume the first tab is 'Curl', adjust as necessary
+                const language = 'Curl';
+
+                // Update the code examples based on the active section and default language
+                changeCodeExamples(this.textContent.trim(), language);
+            }
+        });
+    });
+
+    // Initial setup for tablinks
+    document.querySelectorAll('.tablinks').forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Clear active class from all tabs
+            document.querySelectorAll('.tablinks').forEach(t => t.classList.remove('active'));
+
+            // Set active class to the clicked tab
+            this.classList.add('active');
+
+            // Get the active nav-link in the sidebar
+            const activeNavLink = document.querySelector('.sidebar .nav-link.active');
+
+            if (activeNavLink) {
+                // Use its text content as the section name
+                const section = activeNavLink.textContent.trim();
+
+                // Change the code examples based on the new language
+                changeCodeExamples(section, this.textContent.trim());
+            }
+        });
+    });
+
+    // Define the function to simulate a click on the first section
+    function initFirstSectionClick() {
+        const firstNavLink = document.querySelector('.sidebar .nav-link');
+        if (firstNavLink) {
+            // Extract the href attribute and convert it to a section ID
+            const sectionId = firstNavLink.getAttribute('href').substring(1);
+            setActiveNavLink(sectionId);
+
+            // Trigger a click to initialize the content and code examples
+            firstNavLink.click();
+        }
+    }
+
+    // Initialize the page by simulating a click on the first nav-link
+    initFirstSectionClick();
+});
+
+    </script>
+</body>
+</html>

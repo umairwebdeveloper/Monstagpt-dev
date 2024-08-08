@@ -1,0 +1,138 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/items.html' as items %}
+{% import 'macros/form.html' as f with context %}
+{% import 'macros/user.html' as account %}
+{% block title %}Appmonsta insights API{% endblock %}
+{% block meta_description %}Unlock App store intelligence with Appmonsta APIs{% endblock %}
+
+{% block body %}
+<style>
+    /* Existing styles */
+    .container-top {
+        background-color: #AECDE2;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding-left: 8.3%;
+        padding-right: 5%;
+        margin-top: 0;
+    }
+
+    body, html {
+        height: 100%;
+    }
+
+    .container-fluid {
+        min-height: 100%;
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .flex-grow-1 {
+        flex-grow: 1;
+    }
+
+    .footer {
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .footer ul {
+        margin-bottom: 0;
+    }
+
+    .footer a {
+        color: #6c757d;
+    }
+
+    .footer a:hover {
+        color: #343a40;
+        text-decoration: none;
+    }
+</style>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        {% include 'layouts/_sidebar.html' %}
+
+        <!-- Main content -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 bg-light d-flex flex-column" style="padding: 0px; min-height: 100vh;">
+            <div class="text-white mt-0">
+                {% include 'layouts/_topnav.html' %}
+            </div>
+            <div class="container-top text-white py-3 mb-4 mt-0">
+                <div class="blue-box ml-8 mr-8">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="heading text-dark">Discover Powerful Insights with our Data Marketplace</h1>
+                            <h2 class="subheading text-secondary">Expand Your Reach</h2>
+                            <p>Step into the most comprehensive app intelligence Data Marketplace tailored to provide you with unparalleled access to global app store data. Dive deep into app insights from both Google Play and the iOS App Store across 155 countries. Trust AppMonsta to fuel your app-driven endeavors with actionable insights and robust data solutions.”</p>
+                        </div>
+                        <div class="col-2 text-center">
+                            <img src="{{ static_url_for('static', filename='images/database.svg') }}" alt="Terminal interface" class="img-fluid" style="width: 50%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-grow-1">
+                <div class="card col-md-10 offset-md-1">
+                    <div class="card-body">
+                        <div class="row">
+                                    
+                            <div class="col-md-10">
+                                <div class="mt-1">
+                                    {% if current_user.subscription.status == 'expired' %}
+                                        <p>Your subscription has expired. To access your S3 buckets, please renew your subscription.</p>
+                                    {% else %}
+                                        {% if current_user.data_marketplace_bucket %}
+                                            <p>Here is your bucket url:</p>
+                                            {% for key in current_user.data_marketplace_bucket.split('\n') %}
+                                                <p>{{ key }}</p>
+                                            {% endfor %}
+                                        {% else %}
+                                            <p>Thank you for your subscription. Your S3 bucket will be available within 24 hours. Please check back later.</p>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="footer mt-auto py-3 bg-light">
+                <div class="container">
+                    <ul class="list-inline text-center mb-0">
+                        <li class="list-inline-item text-muted">
+                            AppMonsta &copy; {{ current_year() }}
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('contact.index') }}">Contact</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('page.privacy') }}">Privacy Policy</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('page.terms') }}">Terms of Service</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('api.docs')}}">MonstaGPT API docs</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('api.appmonsta_docs')}}">AppMonsta API docs</a>
+                        </li>
+                    </ul>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+</div>
+
+{% endblock %}

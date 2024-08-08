@@ -1,0 +1,17 @@
+<html>
+<body>
+    <img src="https://beta.appmonsta.ai/images/new_am_logo.png" class="img-fluid" height="100" title="AppMonsta Insights" alt="AppMonsta Insights">
+
+    <p>Hi <strong>{{ email }}</strong>,</p>
+
+    <p>Thanks for signing up to AppMonsta Insights.</p>
+    <p>Here is your confirmation email. Click the link below to confirm your account:</p>
+
+    <a href="{{ confirmation_token }}">{{ confirmation_token }}</a>
+    
+    <p>You'll need to do this before you can access the rest of the website.
+
+Thanks,
+AppMonsta Insights</p>
+</body>
+</html>

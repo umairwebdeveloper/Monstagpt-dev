@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-md navbar-light bg-white">
+    <div class="container">
+      <button class="navbar-toggler" type="button" data-toggle="collapse"
+              data-target="#navbarCollapse"
+              aria-controls="navbarCollapse"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav ml-auto">
+          {% if current_user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('stripe_payments.test') }}">
+              <span class="am-badge">Pricing</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://status.openai.com/" target="_blank" rel="noopener noreferrer">
+              <span class="am-badge">OpenAI Status</span>
+            </a>
+          </li>
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle"
+                 data-toggle="dropdown"
+                 role="button" aria-haspopup="true"
+                 aria-expanded="false"><i class="fas fa fa-fw fa-user"></i>
+                <span class="caret"></span></a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item "href="{{ url_for('user.settings') }}">
+                  Settings
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="{{ url_for('gpt.history') }}"
+                  class="dropdown-item">
+                   Question history
+                 </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{ url_for('user.logout') }}">
+                  Log out
+                </a>
+              </div>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('user.login') }}">
+                Log in
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('user.signup') }}">
+                Sign up
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>

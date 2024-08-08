@@ -1,0 +1,49 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/items.html' as items %}
+
+{% block title %}Questions history{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h2>questions history</h2>
+        {% if questions.total == 0 %}
+          <p>No questions found.</p>
+        {% else %}
+          <table class="table mt-5">
+            <thead>
+            <tr>
+              <th>Date</th>
+              <th>Question</th>
+              <th>Answer</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for question in questions.items %}
+              <tr>
+                <td>
+                  <time class="js-from-now"
+                        data-datetime="{{ question.created_on }}">
+                    {{ question.created_on }}
+                  </time>
+                </td>
+                <td>{{ question.question }}</td>
+                <td>
+                  <span class="text-muted">{{ question.answer }}</span>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+
+          {{ items.paginate(questions) }}
+        {% endif %}
+        <hr class="mt-5" />
+        <a href="{{ url_for('gpt.main') }}" class="btn btn-primary">
+          Go back to questions
+        </a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

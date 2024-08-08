@@ -1,0 +1,190 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/form.html' as f with context %}
+
+{% block title %}Account settings{% endblock %}
+
+{% block body %}
+<style>
+  /* Existing styles */
+  .container-top {
+      background-color: #AECDE2;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding-left: 8.3%;
+      padding-right: 5%;
+      margin-top: 0;
+  }
+
+  body, html {
+      height: 100%;
+  }
+
+  .container-fluid {
+      min-height: 100%;
+  }
+
+  main {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+  }
+
+  .flex-grow-1 {
+      flex-grow: 1;
+  }
+
+  .footer {
+      background-color: #f8f9fa;
+      border-top: 1px solid #dee2e6;
+  }
+
+  .footer ul {
+      margin-bottom: 0;
+  }
+
+  .footer a {
+      color: #6c757d;
+  }
+
+  .footer a:hover {
+      color: #343a40;
+      text-decoration: none;
+  }
+</style>
+
+<div class="container-fluid">
+  <div class="row">
+      <!-- Sidebar -->
+      {% include 'layouts/_sidebar.html' %}
+      
+
+      <!-- Main content -->
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 bg-light d-flex flex-column" style="padding: 0px; min-height: 100vh;">
+        <div class="text-white mt-0">
+            {% include 'layouts/_topnav.html' %}
+        </div>
+        <div class="flex-grow-1">
+
+          <div class="row">
+            <div class="col-md-5">
+              <h2>Settings</h2>
+              <h5 class="text-muted">{{ current_user.email }}</h5>
+              <div class="list-group">
+                <a href="{{ url_for('user.update_credentials') }}"
+                  class="list-group-item list-group-item-action">
+                  Update email and password
+                </a>
+              </div>
+            </div>
+
+            <div class="col-md-5 offset-md-1">
+              {% if current_user.subscription %}
+                <h2>
+                  Subscription Plan: {{ current_user.subscription.plan | title }}
+                </h2>
+                <a href="{{ url_for('billing.billing_details') }}"
+                class="list-group-item list-group-item-action">
+                Subscriptions & Purchases
+              </a>
+                <div class="list-group">
+                  <a class="list-group-item list-group-item-action"
+                    href="{{ url_for('stripe_payments.stripe_customer_portal') }}">
+                    Manage subscription
+                  </a>
+                </div>
+              {% else %}
+                <h2>Subscribe today</h2>
+                <!-- <h5 class="text-muted">Hey buddy, why aren't you subscribed?</h5> -->
+                <p>
+                  Now that you've created an account, wouldn't it be unbelievably
+                  amazing to unlock everything by becoming a subscriber today?
+                </p>
+                <a href="{{ url_for('stripe_payments.test') }}" class="btn btn-primary">
+                  Learn more
+                </a>
+                
+                <div class="list-group">
+                  <a href="{{ url_for('billing.billing_details') }}"
+                    class="list-group-item list-group-item-action">
+                    Subscriptions & Purchases
+                  </a>
+                </div>
+              {% endif %}
+
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-5">
+              <h2 class="mt-5">Gaming GPT</h2>
+
+              <h5 class="text-warning">
+                You are on the <strong>{{ user_plan }}</strong> plam
+              </h5>
+              <h5 class="text-warning">
+                You can ask 1 GPT question every <strong>{{ rate_limit }}</strong> seconds
+              </h5>
+
+              
+              <div class="list-group">
+                <a href="{{ url_for('gpt.history') }}"
+                  class="list-group-item list-group-item-action">
+                  Question history
+                </a>
+              </div>
+            </div>
+            <div class="col-md-5 offset-md-1">
+              <h2> API tokens</h2>
+              <!-- <h5> You have {{ current_user.api|length }} active api keys</h5> -->
+              <h5>Active api keys:</h5>
+              {% if delete_forms %}
+                {% for delete_form in delete_forms %}
+                    <div>
+                        {{ delete_form.api_key.data }} <!-- This is the API key -->
+                        <form class="btn" action="{{ url_for('api.remove_key') }}" method="post">
+                            {{ delete_form.hidden_tag() }}
+                            {{ delete_form.submit() }}
+                        </form>
+                    </div>
+                {% endfor %}
+              {% endif %}
+                <div>
+                  <a href="{{ url_for('api.add_key') }}"
+                  class="am-blue-btn mt-3">Add api key</a>
+                </div>
+            </div>
+
+          </div>  
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer mt-auto py-3 bg-light">
+          <div class="container">
+              <ul class="list-inline text-center mb-0">
+                  <li class="list-inline-item text-muted">
+                      AppMonsta &copy; {{ current_year() }}
+                  </li>
+                  <li class="list-inline-item">
+                      <a href="{{ url_for('contact.index') }}">Contact</a>
+                  </li>
+                  <li class="list-inline-item">
+                      <a href="{{ url_for('page.privacy') }}">Privacy Policy</a>
+                  </li>
+                  <li class="list-inline-item">
+                      <a href="{{ url_for('page.terms') }}">Terms of Service</a>
+                  </li>
+                  <li class="list-inline-item">
+                      <a href="{{ url_for('api.docs')}}">MonstaGPT API docs</a>
+                  </li>
+                  <li class="list-inline-item">
+                      <a href="{{ url_for('api.appmonsta_docs')}}">AppMonsta API docs</a>
+                  </li>
+              </ul>
+          </div>
+        </footer>
+
+
+      </main>
+    </div>
+  </div>
+{% endblock %}

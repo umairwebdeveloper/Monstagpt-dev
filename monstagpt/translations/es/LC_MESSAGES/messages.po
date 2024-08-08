@@ -1,0 +1,141 @@
+# Spanish translations for PROJECT.
+# Copyright (C) 2016 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2020-07-15 12:14+0000\n"
+"PO-Revision-Date: 2016-05-27 20:46+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.0\n"
+
+#: monstagpt/blueprints/billing/forms.py:25
+#: monstagpt/blueprints/billing/forms.py:45
+msgid "Stripe publishable key"
+msgstr ""
+
+#: monstagpt/blueprints/billing/forms.py:27
+msgid "Plan"
+msgstr ""
+
+#: monstagpt/blueprints/billing/forms.py:29
+#: monstagpt/blueprints/billing/forms.py:36
+#: monstagpt/blueprints/billing/forms.py:50
+msgid "Do you have a coupon code?"
+msgstr ""
+
+#: monstagpt/blueprints/billing/forms.py:31
+#: monstagpt/blueprints/billing/forms.py:52
+msgid "Name on card"
+msgstr "el name en cardo"
+
+#: monstagpt/blueprints/billing/forms.py:47
+msgid "How many coins do you want?"
+msgstr ""
+
+#: monstagpt/blueprints/billing/templates/billing/payment_method.html:8
+msgid "Enter credit card"
+msgstr ""
+
+#: monstagpt/blueprints/billing/templates/billing/payment_method.html:10
+msgid "Process payment"
+msgstr ""
+
+#: monstagpt/blueprints/billing/templates/billing/payment_method.html:12
+msgid "Update credit card"
+msgstr ""
+
+#: monstagpt/blueprints/billing/templates/billing/payment_method.html:14
+msgid "Update payment method"
+msgstr ""
+
+#: monstagpt/blueprints/billing/templates/billing/payment_method.html:26
+msgid "subscription"
+msgstr ""
+
+#: monstagpt/blueprints/billing/templates/billing/payment_method.html:28
+msgid "This plan costs"
+msgstr ""
+
+#: monstagpt/blueprints/billing/templates/billing/purchase_coins.html:12
+msgid "Purchase coins"
+msgstr ""
+
+#: monstagpt/blueprints/billing/templates/billing/macros/billing.html:226
+#: monstagpt/blueprints/billing/views/billing.py:85
+#: monstagpt/blueprints/billing/views/billing.py:183
+#: monstagpt/blueprints/billing/views/billing.py:240
+msgid "You must enable JavaScript for this request."
+msgstr ""
+
+#: monstagpt/blueprints/billing/templates/billing/macros/billing.html:245
+msgid "Card number"
+msgstr ""
+
+#: monstagpt/blueprints/billing/templates/billing/macros/billing.html:254
+msgid "Exp. date"
+msgstr ""
+
+#: monstagpt/blueprints/billing/templates/billing/macros/billing.html:308
+msgid "Protected by 128-bit SSL encryption"
+msgstr ""
+
+#: monstagpt/blueprints/billing/views/billing.py:59
+msgid "You already have an active subscription."
+msgstr ""
+
+#: monstagpt/blueprints/billing/views/billing.py:67
+msgid "Sorry, that plan did not exist."
+msgstr ""
+
+#: monstagpt/blueprints/billing/views/billing.py:83
+msgid "Awesome, thanks for subscribing!"
+msgstr ""
+
+#: monstagpt/blueprints/billing/views/billing.py:120
+msgid "Your subscription has been updated."
+msgstr ""
+
+#: monstagpt/blueprints/billing/views/billing.py:123
+msgid "That coupon code is not valid."
+msgstr ""
+
+#: monstagpt/blueprints/billing/views/billing.py:137
+msgid "You do not have an active subscription."
+msgstr ""
+
+#: monstagpt/blueprints/billing/views/billing.py:147
+msgid "Sorry to see you go, your subscription has been cancelled."
+msgstr ""
+
+#: monstagpt/blueprints/billing/views/billing.py:159
+msgid "You do not have a payment method on file."
+msgstr ""
+
+#: monstagpt/blueprints/billing/views/billing.py:181
+msgid "Your payment method has been updated."
+msgstr ""
+
+#: monstagpt/blueprints/billing/views/billing.py:237
+#, python-format
+msgid "%(amount)s coins have been added to your account."
+msgstr ""
+
+#~ msgid "Enter payment information"
+#~ msgstr ""
+
+#~ msgid "Update payment information"
+#~ msgstr ""
+
+#~ msgid "You need to enable JavaScript to proceed."
+#~ msgstr ""
+

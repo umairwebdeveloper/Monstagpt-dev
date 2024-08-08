@@ -1,0 +1,96 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/form.html' as f with context %}
+{% import 'billing/macros/billing.html' as billing with context %}
+
+{% block title %}Ready to start winning?{% endblock %}
+{% block meta_description %}Sign up today to subscribe so you can begin to
+ask questions to AppMonsta data{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 mb-4">
+        {% if current_user.subscription %}
+          <h2 class="h1 text-center">You're about to change plans</h2>
+          <div class="alert alert-warning text-center mb-3">
+            Your plan will change <strong>immediately</strong> after clicking
+            'Change plan'.
+          </div>
+        {% else %}
+          <h2 class="h1 text-center">Ready to sign up?</h2>
+          <!-- <h3 class="font-weight-light text-center text-muted mt-0">
+            You're a few clicks away from being able to ask questions
+          </h3> -->
+        {% endif %}
+        {% call f.form_tag('billing.update', fid='subscription_form') %}
+          {% if current_user.subscription %}
+            <div class="row">
+              <div class="col-md-4 offset-md-4">
+                {{ form.coupon_code.label }}
+                {{ f.field(form.coupon_code, css_class='text-uppercase') }}
+                <div id="coupon_code_status" class="small alert alert-success mt-1">
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          <div class="row mt-5 pricing-form">
+
+            {% call billing.plan({"metadata": {"header": True}}) %}
+            <ul class="list-group list-group-flush text-center">
+              <li class="list-group-item header-pricing-column pricing-cell">Tokens per month</li>
+              <!-- <li class="list-group-item header-pricing-column  pricing-cell">Ask questions in simple language</li>
+              <li class="list-group-item header-pricing-column pricing-cell">Dicta optio cumque dolore</li>
+              <li class="list-group-item header-pricing-column  pricing-cell">Dicta optio cumque dolore</li>
+              <li class="list-group-item header-pricing-column pricing-cell">Consequuntur voluptatum</li>
+              <li class="list-group-item header-pricing-column  pricing-cell">Consequuntur voluptatum</li> -->
+            </ul>
+            {% endcall %}
+            {% call billing.plan(plans['0']) %}
+            
+            <ul class="list-group list-group-flush text-center">
+              <li class="list-group-item pricing-cell"><div >10 (one off)</div></li>
+              <!-- <li class="list-group-item  pricing-cell"><div class="check"></div></li>
+              <li class="list-group-item pricing-cell"><div class="check"></div></li>
+              <li class="list-group-item  pricing-cell"><div class="check"></div></li>
+              <li class="list-group-item pricing-cell"><div class="check"></div></li>
+              <li class="list-group-item  pricing-cell" ><div class="check"></div></li> -->
+            </ul>
+          {% endcall %}
+            {% call billing.plan(plans['1']) %}
+            
+              <ul class="list-group list-group-flush text-center">
+                <li class="list-group-item pricing-cell"><div >100</div></li>
+                <!-- <li class="list-group-item  pricing-cell"><div class="check"></div></li>
+                <li class="list-group-item pricing-cell"><div class="check"></div></li>
+                <li class="list-group-item  pricing-cell"><div class="check"></div></li>
+                <li class="list-group-item pricing-cell"><div class="check"></div></li>
+                <li class="list-group-item  pricing-cell" ><div class="check"></div></li> -->
+              </ul>
+            {% endcall %}
+            {% call billing.plan(plans['2']) %}
+              <ul class="list-group list-group-flush text-center">
+                <li class="list-group-item pricing-cell"><div >300</div></li>
+                <!-- <li class="list-group-item  pricing-cell"><div class="check"></div></li>
+                <li class="list-group-item pricing-cell"><div class="check"></div></li>
+                <li class="list-group-item  pricing-cell"><div class="check"></div></li>
+                <li class="list-group-item pricing-cell"><div class="check"></div></li>
+                <li class="list-group-item  pricing-cell"><div class="check"></div></li> -->
+              </ul>
+            {% endcall %}
+            {% call billing.plan(plans['3']) %}
+              <ul class="list-group list-group-flush text-center">
+                <li class="list-group-item pricing-cell"><div >700</div></li>
+                <!-- <li class="list-group-item  pricing-cell"><div class="check"></div></li>
+                <li class="list-group-item pricing-cell"><div class="check"></div></li>
+                <li class="list-group-item  pricing-cell"><div class="check"></div></li>
+                <li class="list-group-item pricing-cell"><div class="check"></div></li>
+                <li class="list-group-item  pricing-cell"><div class="check"></div></li> -->
+              </ul>
+            {% endcall %}
+            
+          </div>
+        {% endcall %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

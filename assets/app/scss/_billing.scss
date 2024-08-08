@@ -1,0 +1,57 @@
+#coupon_code_status {
+  display: none;
+}
+
+#duration_in_months_wrapper {
+  display: none;
+}
+
+.payment-errors {
+  display: none;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.cc-details {
+  width: 75px;
+}
+
+.scale-up {
+  transform: scale(1.05);
+}
+
+.no-padding-full {
+  padding: 0 !important;
+  margin: 0 !important
+}
+
+.no-padding-sides {
+  padding:1.25em 0px !important
+}
+
+.recommended-card {
+  z-index:100000;
+ 
+}
+
+.no-border {
+  border: 0px !important;
+}
+
+.check {
+  display: inline-block;
+  transform: rotate(45deg);
+  height: 24px;
+  width: 12px;
+  border-bottom: 7px solid #78b13f;
+  border-right: 7px solid #78b13f;
+}
+
+.pricing-card-header {
+  height:74.6px;
+}
+
+.pricing-btn {
+  width: 150px;
+  margin: auto;
+}

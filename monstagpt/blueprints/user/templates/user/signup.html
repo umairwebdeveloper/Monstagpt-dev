@@ -1,0 +1,73 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form.html' as f with context %}
+
+{% block title %}Sign up for a new account{% endblock %}
+
+{% block body %}
+  <div class="container-fluid h-100">
+    <div class="row h-100">
+      <div class="col-6 d-flex justify-content-center align-items-center bg-info"> <!-- Updated class -->
+        <div>
+            <img src="{{ static_url_for('static', filename='images/appmonstalogo_black.png') }}" alt="AppMonsta" class="img-fluid" style="width: 500px;"> <!-- Bootstrap's img-fluid -->
+        </div>
+      </div>
+
+      <div class="col-6 d-flex justify-content-center align-items-center">
+        <div class="form-container">
+          {% call f.form_tag('user.signup') %}
+            <h2 class="mt-2 mb-4">Sign up today</h1>
+
+            {% call f.form_group(form.email,
+                                autofocus='autofocus',
+                                placeholder='Email address') %}
+            {% endcall %}
+
+            {% call f.form_group(form.password) %}
+            {% endcall %}
+            {% call f.form_group(form.confirmpassword,
+              placeholder='Confirm password') %}
+            {% endcall %}
+
+            <div class="row">
+              <div class="col-md-6">
+                <button type="submit" class="btn btn-primary btn-block">
+                  Register
+                </button>
+              </div>
+              <div class="col-md-6">
+                <a href="{{ url_for('user.login') }}"
+                  class="btn am-secondary-btn btn-block">
+                  Sign in
+                </a>
+              </div>
+            </div>
+          {% endcall %}
+          <div>
+            By registering, you are agreeing to our
+            <a href="{{ url_for('page.terms') }}" style="color: #6BC5EA;">
+              terms & conditions
+            </a>
+          </div>
+        </div>
+        {% block footer %}
+        {% endblock %}
+      </div>
+
+
+
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var emailInput = document.getElementById("email");
+
+        if (emailInput) {
+            emailInput.addEventListener("input", function() {
+                this.value = this.value.toLowerCase();
+            });
+        } else {
+            console.error("Email input element not found!");
+        }
+    });
+</script>
+{% endblock %}

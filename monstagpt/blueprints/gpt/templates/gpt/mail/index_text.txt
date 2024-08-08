@@ -1,0 +1,10 @@
+GPT question feedback email received
+User {{user_email}} has sent feedback about a gpt question
+Question:
+{{custom_question}}
+Answer:
+{{custom_answer}}
+User typed message:
+{{custom_message}}
+Thread_id:
+{{custom_thread}}

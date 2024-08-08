@@ -1,0 +1,692 @@
+{% extends 'layouts/app.html' %}
+
+{% block title %}Admin - Dashboard{% endblock %}
+{% block head_extra %}
+<!-- Include Prism CSS -->
+<script src="{{ url_for('static', filename='/prism.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='/prism.css') }}"/>
+{% endblock %}
+
+{% block body %}
+
+<style>
+
+</style>
+
+    <div class="container">
+        
+        <h1>Getting started</h1>
+        <p>
+        This is a quick guide on how to start consuming data via the API. Starting from beginning to end,
+        this section outlines how to create an AppMonsta account, locate your API keys, and how to request your 
+        previous questions/answers as well as ask new questions. Please note an active subscription is required to use API keys
+        </p>
+        <h2>Creating aa AppMonsta account and finding your API keys</h2>
+        <p>
+        To request data from AppMonsta you’ll need to include your API keys in your requests. 
+        This section outlines how one can create an account and generate the keys necessary to start querying for market data.
+        </p>
+        <ol>
+            <li>
+                <p>Navigate to 
+                    <a href="https://beta.appmonsta.ai">AppMonsta’s Website</a>
+
+                </p>
+            </li>
+            <li>
+                <p>Sign up for a free account using the sign up button</p>
+                <p>
+                    <img src="{{ url_for('static', filename='images/appmonsta_homepage.png') }}" class="img-fluid"
+                    width="500" alt="AppMonsta homepage"/>
+                </p>
+            </li>
+            <li>
+                <p>
+                    After confirming your account and logging in, navigate to your settings panel
+                </p>
+                <p>
+                    <img src="{{ url_for('static', filename='images/appmonsta_settings.png') }}" class="img-fluid"
+                    width="500" alt="AppMonsta settings"/>
+                </p>
+            </li>
+            <li>
+                <p>
+                    click the ‘Add api key’ button. You can have up to 4 simultaneous keys
+                </p>
+                <p>
+                    <img src="{{ url_for('static', filename='images/appmonsta_api.png') }}" class="img-fluid.max-width: 40%"
+                    width="500" alt="AppMonsta settings"/>
+                </p>
+            </li>
+        </ol>
+        <h2>How to view your previous conversations</h2>
+        <p>
+        Code examples to view your previous conversations are below. 
+        Be sure to include your API key as ‘x-access-token’ in the
+        headers and send an empty payload as ‘{}’
+        </p>
+        <div class="row">
+            <div class="col-md-15">
+                    <!-- Navigation Tabs -->
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="curl-tab-1" data-toggle="tab" href="#curl-1" role="tab" aria-controls="curl" aria-selected="true">cURL</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="python-tab-1" data-toggle="tab" href="#python-1" role="tab" aria-controls="python" aria-selected="false">Python</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="javascript-tab-1" data-toggle="tab" href="#javascript-1" role="tab" aria-controls="javascript" aria-selected="false">JavaScript</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="php-tab-1" data-toggle="tab" href="#php-1" role="tab" aria-controls="php" aria-selected="false">PHP</a>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="curl-1" role="tabpanel" aria-labelledby="curl-tab">
+                        <pre><code class="language-bash">
+                            curl --location --request GET 'https://beta.appmonsta.ai/api/get_conversations' \
+                            --header 'x-access-token: YOUR-API-KEY' \
+                            --header 'Content-Type: application/json' \
+                            --data '{}'</code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="python-1" role="tabpanel" aria-labelledby="python-tab">
+                        <pre><code class="language-python">
+                            import requests
+                            import json
+
+                            url = "https://beta.appmonsta.ai/api/get_conversations"
+
+                            payload = json.dumps({})
+                            headers = {
+                            'x-access-token': 'YOUR-API-KEY',
+                            'Content-Type': 'application/json',
+                            }
+
+                            response = requests.request("GET", url, headers=headers, data=payload)
+
+                            print(response.text)
+
+                        </code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="javascript-1" role="tabpanel" aria-labelledby="javascript-tab">
+                        <pre><code class="language-javascript">
+                            var settings = {
+                                "url": "https://beta.appmonsta.ai/api/get_conversations",
+                                "method": "GET",
+                                "timeout": 0,
+                                "headers": {
+                                  "x-access-token": "YOUR-API-KEY",
+                                  "Content-Type": "application/json"
+                                },
+                                "data": JSON.stringify({}),
+                              };
+                              
+                              $.ajax(settings).done(function (response) {
+                                console.log(response);
+                              });
+                        </code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="php-1" role="tabpanel" aria-labelledby="php-tab">
+                        <pre><code class="language-php">
+                            &lt;?php
+                            $curl = curl_init();
+
+                            curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://beta.appmonsta.ai/api/get_conversations',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'GET',
+                            CURLOPT_POSTFIELDS =>'{}',
+                            CURLOPT_HTTPHEADER => array(
+                                'x-access-token: YOUR-API-KEY',
+                                'Content-Type: application/json',
+                            ),
+                            ));
+
+                            $response = curl_exec($curl);
+
+                            curl_close($curl);
+                            echo $response;
+                            ?&gt;
+                        </code></pre>
+                    </div>
+                    <!-- Add more tabs for different languages as needed -->
+                </div>
+            </div>
+        </div>
+        <p>The response is a list of conversations consisting of conversation_id, conversation name and the date it was last updated.</p>
+        <div class="row">
+            <div class="col-md-15">
+                <div class="tab-pane fade show active" id="curl-2" role="tabpanel" aria-labelledby="curl-tab">
+                    <pre><code class="language-bash">
+                        [
+                            {
+                                "conversation_id": "c50e20810ff6433b9aa2b71d043f6cae",
+                                "name": "The highest review for a gaming ...",
+                                "updated_on": "Tue, 07 Nov 2023 12:32:44 GMT"
+                            },
+                            {
+                                "conversation_id": "d05314df0250430b8d46f7a0e02a7ecc",
+                                "name": "Itunes downloads march",
+                                "updated_on": "Mon, 06 Nov 2023 17:06:06 GMT"
+                            },
+                            {
+                                "conversation_id": "e589fcec799e46f4a7d6323d06961ce3",
+                                "name": "The revenue for Minecraft on android ...",
+                                "updated_on": "Mon, 06 Nov 2023 16:56:12 GMT"
+                            },
+                            {
+                                "conversation_id": "0ddc3c327752488e940d694a6d8fd197",
+                                "name": "The average rating for Football Manager... ",
+                                "updated_on": "Wed, 01 Nov 2023 16:48:27 GMT"
+                            } 
+                        ]
+                    </code></pre>
+                </div>
+            </div>
+        </div>
+
+        <h2>How to view questions/answers for an existing conversation</h2>
+        <p>Code examples for viewing the questions/answers for an existing conversation are below.
+        Be sure to include a conversation id from the previous section in the payload as an id.</p>
+        <div class="row">
+            <div class="col-md-15">
+                <!-- Include jQuery and Bootstrap Bundle with Popper for the tabs -->
+                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+                
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="curl-tab-3" data-toggle="tab" href="#curl-3" role="tab" aria-controls="curl" aria-selected="true">cURL</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="python-tab-3" data-toggle="tab" href="#python-3" role="tab" aria-controls="python" aria-selected="false">Python</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="javascript-tab-3" data-toggle="tab" href="#javascript-3" role="tab" aria-controls="javascript" aria-selected="false">JavaScript</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="php-tab-3" data-toggle="tab" href="#php-3" role="tab" aria-controls="php" aria-selected="false">PHP</a>
+                    </li>
+                </ul>
+
+                 <!-- Tab Content -->
+                 <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="curl-3" role="tabpanel" aria-labelledby="curl-tab">
+                        <pre><code class="language-bash">
+                            curl --location --request GET 'https://beta.appmonsta.ai/api/get_questions' \
+                            --header 'x-access-token: YOUR-API-KEY' \
+                            --header 'Content-Type: application/json' \
+                            --data '{"conversation_id":"YOUR-CONVERSATION-ID"}'
+                        </code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="python-3" role="tabpanel" aria-labelledby="python-tab">
+                        <pre><code class="language-python">
+                            import requests
+                            import json
+
+                            url = "127.0.0.1/api/get_questions"
+
+                            payload = json.dumps({
+                            "conversation_id": "YOUR-CONVERSATION-ID"
+                            })
+                            headers = {
+                            'x-access-token': 'YOUR-API-KEY',
+                            'Content-Type': 'application/json'
+                            }
+
+                            response = requests.request("GET", url, headers=headers, data=payload)
+
+                            print(response.text)
+
+
+                        </code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="javascript-3" role="tabpanel" aria-labelledby="javascript-tab">
+                        <pre><code class="language-javascript">
+                            var settings = {
+                                "url": "https://beta.appmonsta.ai/api/get_questions",
+                                "method": "GET",
+                                "timeout": 0,
+                                "headers": {
+                                  "x-access-token": "YOUR-API-KEY",
+                                  "Content-Type": "application/json"
+                                },
+                                "data": JSON.stringify({
+                                  "conversation_id": "YOUR-CONVERSATION-ID"
+                                }),
+                              };
+                              
+                              $.ajax(settings).done(function (response) {
+                                console.log(response);
+                              });
+                        </code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="php-3" role="tabpanel" aria-labelledby="php-tab">
+                        <pre><code class="language-php">
+                            &lt;?php
+                            $curl = curl_init();
+
+                            curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://beta.appmonsta.ai/api/get_questions',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'GET',
+                            CURLOPT_POSTFIELDS =>'{"conversation_id":"YOUR-CONVERSATION-ID"}',
+                            CURLOPT_HTTPHEADER => array(
+                                'x-access-token: YOUR-API-KEY',
+                                'Content-Type: application/json'
+                            ),
+                            ));
+
+                            $response = curl_exec($curl);
+
+                            curl_close($curl);
+                            echo $response;
+                            ?&gt;
+                        </code></pre>
+                    </div>
+                    <!-- Add more tabs for different languages as needed -->
+                </div>
+            </div>  
+        </div>
+        <p>The response is a list of questions and answers from the conversation:</p>
+        <div class="row">
+            <div class="col-md-15">
+                <div class="tab-pane fade show active" id="curl-4" role="tabpanel" aria-labelledby="curl-tab">
+                    <pre><code class="language-bash">
+                        [
+                            {
+                                "answer": "TikTok was the most-downloaded app in the Google Play Store in the United States in June 2023, 
+                                            generating over 3.13 million downloads from Android users.",
+                                "question": "Which app had the most downloads in the US in the google play store in June 2023"
+                            },
+                            {
+                                "answer": "In September 2023, YouTube was the most popular Google app, generating approximately 14 million
+                                            downloads from iOS and Google Play Store users during the month.",
+                                "question": "How many downloads did it have in September 2023?"
+                            },
+                            {
+                                "answer": "YouTube was the most popular android app last week.",
+                                "question": "what android app had the highest downloads last week?"
+                            }
+                        ]
+                    </code></pre>
+                </div>
+            </div>
+        </div>
+        <h2>How to ask a new question</h2>
+        <p>
+            Code examples to ask a new question are below. Be sure to include the question in the payload. 
+            If you specify a conversation_id then the question will be added to the conversation. 
+            If you do not specify a conversation id then a new conversation will be created.
+        </p>
+        <div class="row">
+            <div class="col-md-15">
+                    <!-- Navigation Tabs -->
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="curl-tab-5" data-toggle="tab" href="#curl-5" role="tab" aria-controls="curl" aria-selected="true">cURL</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="python-tab-5" data-toggle="tab" href="#python-5" role="tab" aria-controls="python" aria-selected="false">Python</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="javascript-tab-5" data-toggle="tab" href="#javascript-5" role="tab" aria-controls="javascript" aria-selected="false">JavaScript</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="php-tab-5" data-toggle="tab" href="#php-5" role="tab" aria-controls="php" aria-selected="false">PHP</a>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="curl-5" role="tabpanel" aria-labelledby="curl-tab">
+                        <pre><code class="language-bash">
+                            curl --location --request GET '127.0.0.1/api/query' \
+                            --header 'x-access-token: YOUR-API-KEY' \
+                            --header 'Content-Type: application/json' \
+                            --data '{"question": "what android app had the highest downloads last week?","conversation_id":"OPTIONAL-CONVERSATION-ID"}'
+                        </code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="python-5" role="tabpanel" aria-labelledby="python-tab">
+                        <pre><code class="language-python">
+                            import requests
+                            import json
+
+                            url = "https://beta.appmonsta.ai/api/query"
+
+                            payload = json.dumps({
+                            "question": "what android app had the highest downloads last week?",
+                            "conversation_id": "OPTIONAL-CONVERSATION-ID"
+                            })
+                            headers = {
+                            'x-access-token': 'YOUR-API-KEY',
+                            'Content-Type': 'application/json'
+                            }
+
+                            response = requests.request("GET", url, headers=headers, data=payload)
+
+                            print(response.text)
+
+
+                        </code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="javascript-5" role="tabpanel" aria-labelledby="javascript-tab">
+                        <pre><code class="language-javascript">
+                            var settings = {
+                                "url": "https://beta.appmonsta.ai/api/query",
+                                "method": "GET",
+                                "timeout": 0,
+                                "headers": {
+                                  "x-access-token": "YOUR-API-KEY",
+                                  "Content-Type": "application/json"
+                                },
+                                "data": JSON.stringify({
+                                  "question": "what android app had the highest downloads last week?",
+                                  "conversation_id": "OPTIONAL-CONVERSATION-ID"
+                                }),
+                              };
+                              
+                              $.ajax(settings).done(function (response) {
+                                console.log(response);
+                              });
+                        </code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="php-5" role="tabpanel" aria-labelledby="php-tab">
+                        <pre><code class="language-php">
+                            &lt;?php
+                            $curl = curl_init();
+
+                            curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://beta.appmonsta.ai/api/query',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'GET',
+                            CURLOPT_POSTFIELDS =>'{"question": "what android app had the highest downloads last week?","conversation_id":"OPTIONAL_CONVERSATION_ID"}',
+                            CURLOPT_HTTPHEADER => array(
+                                'x-access-token: YOUR-API-KEY',
+                                'Content-Type: application/json'
+                            ),
+                            ));
+
+                            $response = curl_exec($curl);
+
+                            curl_close($curl);
+                            echo $response;
+                            ?&gt;
+                        </code></pre>
+                    </div>
+                    <!-- Add more tabs for different languages as needed -->
+                </div>
+            </div>
+        </div>
+        <h5>Response</h5>
+        <p>
+        As questions can take some time to answer, the response is a task id:
+        </p>
+        <div class="row">
+            <div class="col-md-15">
+                <div class="tab-pane fade show active" id="curl-6" role="tabpanel" aria-labelledby="curl-tab">
+                    <pre><code class="language-bash">
+                        {
+                            "task_id": "79d18901-6df8-4547-abb2-62d7e2004bfe"
+                        }                        
+                    </code></pre>
+                </div>
+            </div>
+        </div>
+        <p>
+            You can see the status of the task like this:
+        </p>
+        <div class="row">
+            <div class="col-md-15">
+                    <!-- Navigation Tabs -->
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="curl-tab-7" data-toggle="tab" href="#curl-7" role="tab" aria-controls="curl" aria-selected="true">cURL</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="python-tab-7" data-toggle="tab" href="#python-7" role="tab" aria-controls="python" aria-selected="false">Python</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="javascript-tab-7" data-toggle="tab" href="#javascript-7" role="tab" aria-controls="javascript" aria-selected="false">JavaScript</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="php-tab-7" data-toggle="tab" href="#php-7" role="tab" aria-controls="php" aria-selected="false">PHP</a>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="curl-7" role="tabpanel" aria-labelledby="curl-tab">
+                        <pre><code class="language-bash">
+                            curl --location 'https://beta.appmonsta.ai/api/result/TASK-ID-HERE' \
+                            --header 'x-access-token: YOUR-API-KEY' \
+                            --data ''
+                        </code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="python-7" role="tabpanel" aria-labelledby="python-tab">
+                        <pre><code class="language-python">
+                            import requests
+
+                            url = "https://beta.appmonsta.ai/api/result/TASK-ID-HERE"
+
+                            payload = ""
+                            headers = {
+                            'x-access-token': 'YOUR-API-KEY'
+                            }
+
+                            response = requests.request("GET", url, headers=headers, data=payload)
+
+                            print(response.text)
+                        </code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="javascript-7" role="tabpanel" aria-labelledby="javascript-tab">
+                        <pre><code class="language-javascript">
+                            var settings = {
+                                "url": "https://beta.appmonsta.ai/api/result/TASK-ID-HERE",
+                                "method": "GET",
+                                "timeout": 0,
+                                "headers": {
+                                  "x-access-token": "YOUR-API-KEY"
+                                },
+                              };
+                              
+                              $.ajax(settings).done(function (response) {
+                                console.log(response);
+                              });
+                        </code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="php-7" role="tabpanel" aria-labelledby="php-tab">
+                        <pre><code class="language-php">
+                            &lt;?php
+                            
+                            $curl = curl_init();
+
+                            curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://beta.appmonsta.ai/api/result/TASK-ID-HERE',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'GET',
+                            CURLOPT_HTTPHEADER => array(
+                                'x-access-token: YOUR-API-KEY'
+                            ),
+                            ));
+
+                            $response = curl_exec($curl);
+
+                            curl_close($curl);
+                            echo $response;
+
+                            
+                            ?&gt;
+                        </code></pre>
+                    </div>
+                    <!-- Add more tabs for different languages as needed -->
+                </div>
+            </div>
+        </div>
+        <p>
+            The suatus will either be
+            <ul>
+                <li>PENDING - task in progress</li>
+                <li> SUCCESS - task completed</li>
+                <li>FAILURE - error with the task</li>
+            </ul>
+            A pending task will look like this:
+        </p>
+        <div class="row">
+            <div class="col-md-15">
+                <div class="tab-pane fade show active" id="curl-8" role="tabpanel" aria-labelledby="curl-tab">
+                    <pre><code class="language-bash">
+                        {
+                            "state": "PENDING",
+                            "status": "Task not yet complete..."
+                        }                                              
+                    </code></pre>
+                </div>
+            </div>
+        </div>
+        <p>After some time it will change to success</p>
+        <div class="row">
+            <div class="col-md-15">
+                <div class="tab-pane fade show active" id="curl-9" role="tabpanel" aria-labelledby="curl-tab">
+                    <pre><code class="language-bash">
+                        {
+                            "result": {
+                                "conversation_id": "c50e20810ff6433b9aa2b71d043f6cae",
+                                "response": "YouTube was the most popular android app last week.",
+                                "tokens left": 278
+                            },
+                            "state": "SUCCESS"
+                        }                    
+                    </code></pre>
+                </div>
+            </div>
+        </div>
+        <p>A successful response will cost 1 token. If there is an error generating a response, a token will not be consumed.</p>
+        <p>Code examples to view your remaining tokens are below.</p>
+        <div class="row">
+            <div class="col-md-15">
+                    <!-- Navigation Tabs -->
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="curl-tab-10" data-toggle="tab" href="#curl-10" role="tab" aria-controls="curl" aria-selected="true">cURL</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="python-tab-10" data-toggle="tab" href="#python-10" role="tab" aria-controls="python" aria-selected="false">Python</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="javascript-tab-10" data-toggle="tab" href="#javascript-10" role="tab" aria-controls="javascript" aria-selected="false">JavaScript</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="php-tab-10" data-toggle="tab" href="#php-10" role="tab" aria-controls="php" aria-selected="false">PHP</a>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="curl-10" role="tabpanel" aria-labelledby="curl-tab">
+                        <pre><code class="language-bash">
+                            curl --location --request GET 'https://beta.appmonsta.ai/api/remaining_tokens' \
+                            --header 'x-access-token: YOUR-API-KEY' \
+                            --header 'Content-Type: application/json' \
+                            --data '{}'
+                        </code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="python-10" role="tabpanel" aria-labelledby="python-tab">
+                        <pre><code class="language-python">
+                            import requests
+                            import json
+
+                            url = "https://beta.appmonsta.ai/api/remaining_tokens"
+
+                            payload = json.dumps({})
+                            headers = {
+                            'x-access-token': 'YOUR-API-KEY',
+                            'Content-Type': 'application/json'
+                            }
+
+                            response = requests.request("GET", url, headers=headers, data=payload)
+
+                            print(response.text)
+
+                        </code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="javascript-10" role="tabpanel" aria-labelledby="javascript-tab">
+                        <pre><code class="language-javascript">
+                            var settings = {
+                                "url": "https://beta.appmonsta.ai/api/remaining_tokens",
+                                "method": "GET",
+                                "timeout": 0,
+                                "headers": {
+                                  "x-access-token": "YOUR-API-KEY",
+                                  "Content-Type": "application/json"
+                                },
+                                "data": JSON.stringify({}),
+                              };
+                              
+                              $.ajax(settings).done(function (response) {
+                                console.log(response);
+                              });
+                        </code></pre>
+                    </div>
+                    <div class="tab-pane fade" id="php-10" role="tabpanel" aria-labelledby="php-tab">
+                        <pre><code class="language-php">
+                            &lt;?php
+                            
+                            $curl = curl_init();
+
+                            curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://beta.appmonsta.ai/api/remaining_tokens',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'GET',
+                            CURLOPT_POSTFIELDS =>'{}',
+                            CURLOPT_HTTPHEADER => array(
+                                'x-access-token: YOUR-API-KEY',
+                                'Content-Type: application/json'
+                            ),
+                            ));
+
+                            $response = curl_exec($curl);
+
+                            curl_close($curl);
+                            echo $response;
+
+                             
+                            ?&gt;
+                        </code></pre>
+                    </div>
+                    <!-- Add more tabs for different languages as needed -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+  
+{% endblock %}

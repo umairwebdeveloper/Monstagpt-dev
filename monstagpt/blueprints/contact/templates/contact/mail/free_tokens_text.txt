@@ -1,0 +1,5 @@
+Free tokens request received
+Request from
+{{user_email}}
+Reason for request:
+ {{user_message}}

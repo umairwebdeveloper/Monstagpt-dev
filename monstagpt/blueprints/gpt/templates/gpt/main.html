@@ -1,0 +1,1048 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/items.html' as items %}
+{% import 'macros/form.html' as f with context %}
+{% import 'macros/user.html' as account %}
+{% block title %}Ask questions about app data{% endblock %}
+{% block meta_description %}Use our advanced AI tools to query app data{% endblock %}
+
+{% block body %}
+<style>
+
+    .container-top {
+        background-color: #AECDE2;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding-left: 8.3%;
+        padding-right: 5%;
+        margin-top: 0;
+    }
+
+    body, html {
+        height: 100%;
+    }
+
+    .container-fluid {
+        min-height: 100%;
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .flex-grow-1 {
+        flex-grow: 1;
+    }
+
+    .footer {
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .footer ul {
+        margin-bottom: 0;
+    }
+
+    .footer a {
+        color: #6c757d;
+    }
+
+    .footer a:hover {
+        color: #343a40;
+        text-decoration: none;
+    }
+
+    /* Page specific styles */
+
+    .scrollable-card-body {
+    max-height: 400px; /* Adjust this value to the height you want */
+    overflow-y: auto;
+    }
+    .scrollable-card-body {
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin; 
+    scrollbar-color: transparent #f5f5f5; /* Initially make the thumb transparent */
+    }
+
+    .scrollable-card-body::-webkit-scrollbar {
+        width: 10px; 
+    }
+
+    .scrollable-card-body::-webkit-scrollbar-track {
+        background-color: #f5f5f5; 
+    }
+
+    .scrollable-card-body::-webkit-scrollbar-thumb {
+        background-color: transparent; /* Make thumb initially invisible */
+        border-radius: 5px;
+    }
+
+    .scrollable-card-body:hover::-webkit-scrollbar-thumb {
+        background-color: #888; 
+    }
+
+    .scrollable-card-body::-webkit-scrollbar-thumb:hover {
+        background-color: #555; 
+    }
+
+    /* For Firefox */
+    .scrollable-card-body:hover {
+        scrollbar-color: #888 #f5f5f5; 
+    }
+    pre{
+    white-space:pre-wrap;
+    }
+
+    .token-box {
+        background-color: white;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding: 15px;
+        border-radius: 5px;
+        margin: 10px 0;
+        text-align: left;
+    }
+
+    .token-box p {
+        margin: 0;
+        font-weight: bold;
+    }
+
+    .btn-buy-tokens {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .btn-buy-tokens:hover {
+        background-color: #0056b3;
+    }
+
+
+    .fixed-bottom-form {
+    position: fixed;
+    bottom: 0;
+    width: 65%;
+    background: white; /* Optional: Add a background color */
+    padding: 10px; /* Optional: Add some padding */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for better visibility */
+    z-index: 900; /* Ensure it stays on top */
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        {% include 'layouts/_sidebar.html' %}
+
+        <!-- Main content -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 bg-light d-flex flex-column" style="padding: 0px; min-height: 100vh;">
+            <div class="text-white mt-0">
+                {% include 'layouts/_topnav.html' %}
+            </div>
+            <div class="container-top text-white py-3 mb-4 mt-0">
+                <div class="blue-box ml-8 mr-8">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="heading text-dark">Unlock Gaming App Insights with AppMonsta AI</h1>
+                            <h2 class="subheading text-secondary">Data Science Evolved.</h2>
+                            <p>Unlock Gaming App Insights: Explore Gaming App Data from the Last 6 months seamlessly. Our AI product empowers you with intuitive natural language queries. Experience the efficiency of having your own data science team at your fingertips. Revolutionise your data analysis workflow.</p>
+                        </div>
+                        <div class="col-2 text-center">
+                            <img src="{{ static_url_for('static', filename='images/game-controller.svg') }}" alt="Game controller" class="img-fluid" style="width: 50%;">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="token-box text-dark">
+                                Plan
+                                {% if current_user.subscription %}
+                                    <p>{{ current_user.subscription.plan }}</p>
+                                {% else %}
+                                    <p>Free</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="token-box text-dark">
+                                Rate Limit
+                                <p>1 question every {{ rate_limit }} seconds</p>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="token-box text-dark">
+                                Next question available in: 
+                                <p><span id="countdown">Loading...</span></h1></p>
+                            </div>
+                        </div>
+                        <div class="col-3 d-flex align-items-end text-right">
+                            <button class="btn-buy-tokens buy_now_btn" data-plan="gpt_tokens" style="margin-bottom: 10px;">Buy more Tokens</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-grow-1">
+                <div class="card col-md-10 offset-md-1">
+                    <div class="card-body">
+
+                        <div class="row mt-4">
+                            <button id="newChatButton" class="btn btn-primary">New conversation</button>
+                        </div>
+                        <div class="row">
+                            
+                            <div class="col-md-4">
+                                <div class="mt-1 scrollable-card-body">
+                                
+                                    {% call f.form_tag('gpt.convo_bulk_delete') %}
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>
+                                                <label for="select_all"></label>
+                                                <input id="select_all" name="select_all" type="checkbox">
+                                                </th>
+                                                <th class="js-col-header text-warning">
+                                                    <!-- {{ items.sort('updated_on', 'Conversation') }} -->
+                                                    Conversation History
+                                                  </th>
+                                                <th id="bulk_actions" colspan="4">
+                                                
+                                                    <div class="form-inline">
+                                                        {{ f.field(bulk_form.scope, inline=True) }}
+                                                        <button type="submit"
+                                                                class="btn btn-primary btn-sm ml-1" onclick="event.stopPropagation();">
+                                                            Delete items
+                                                        </button>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for conversation in conversations_list %}
+                                                    <tr>
+                                                        <td>
+                                                            <label for="bulk_ids-{{ conversation.uuid }}"></label>
+                                                            <input class="js-checkbox-item" id="bulk_ids-{{ conversation.uuid }}" name="bulk_ids" type="checkbox" value="{{ conversation.uuid }}">
+                                                        </td>
+                                                        <td class="small">
+                                                            <!-- <a href="{{ url_for('gpt.ask_questions', conversation=conversation.uuid) }}">
+                                                                {{ conversation.name }}
+                                                            </a> -->
+                                                            <!-- <span id="nameSpan-{{ conversation.uuid }}" onclick="loadQuestions('{{ conversation.uuid }}')">{{ conversation.name }}</span> -->
+                                                            <a href="javascript:void(0);" id="nameSpan-{{ conversation.uuid }}" onclick="loadQuestions('{{ conversation.uuid }}')">{{ conversation.name }}</a>
+                
+                                                            <span onclick="editConversationName('{{ conversation.uuid }}'); event.stopPropagation();"><i class="fa fa-edit"></i></span>
+                                                            <input type="text" id="editInput-{{ conversation.uuid }}" value="{{ conversation.name }}" style="display: none;">
+                                                            <button id="updateButton-{{ conversation.uuid }}" onclick="updateConversationName('{{ conversation.uuid }}')" style="display: none;">Update</button>
+                                                            <button id="cancelButton-{{ conversation.uuid }}" onclick="cancelEditConversationName('{{ conversation.uuid }}')" style="display: none;">Cancel</button>
+                
+                                                            <br>
+                                                            <time class="js-from-now" data-datetime="{{ conversation.updated_on }}">
+                                                                {{ conversation.updated_on.strftime("%Y-%m-%d %H:%M:%S") }}
+                                                            </time>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% endcall %}
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="mt-1 scrollable-card-body">
+                                
+
+
+                                    <div div id="previous_questions_card" style="display: none;">
+                                
+                                            <div id="recent_questions">
+                                                <table class="table your-questions-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Question</th>
+                                                        <th>Answer</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for question in questions %}
+                                                    <tr>
+                                                        <td class="small">
+                                                            <time class="js-from-now" data-datetime="{{ conversation.updated_on }}">
+                                                                {{ question.date.strftime("%Y-%m-%d %H:%M:%S") }}
+                                                            </time>
+                                                        </td>
+                                                        <td class="small">
+                                                            {{ question.question }}
+                                                        </td>
+                                                        <td class="small">
+                                                            {{ question.answer }}
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                                </table>
+                                            </div>
+                                    
+                                    </div>
+                                    <div div id="suggested_questions_card" style="display:none;">
+                                
+                                            <div id="suggested_questions">
+                                                <table class="table suggested-questions-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Suggested questions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for question in suggested_questions %}
+                                                    <tr>
+                                                        <td class="small">
+                                                            {{ question.question }}
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                                </table>
+                                            </div>
+                                    
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form id="askQuestionForm">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-fw fa-rocket"></i>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" style="border-color: #F5D39D;"
+                                                id="questionInput" name="questionInput"
+                                                placeholder="Ask your question here">
+                                                <input type="hidden" name="conversation" value="{{ conversation }}">
+                                        </div>
+                                    </div>
+                        
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <button type="submit" id="askQuestionButton" disabled class="btn btn-primary btn-block custom-colour">
+                                                <img src="{{ static_url_for('static', filename='images/spinner.gif') }}"
+                                                    class="spinner"
+                                                    width="16" height="11" alt="Spinner"/>
+                                                Ask Question
+                                            </button>
+                                        </div>
+                                    
+                                        <div class="col-3">
+                                            <!-- Button trigger modal -->
+                                            <button type="button" class="am-secondary-btn" data-toggle="modal" data-target=".bd-example-modal-sm">Feedback</button>
+                                        </div>
+                                        <div class="col-3">
+                                            <button type="button" id="cancelTaskButton" style="display:none;" class="btn btn-primary btn-block">Cancel</button>
+                                        </div>
+                                        <div class="col-3">
+                                            <i id="thumbsUpButton" class="fa fa-thumbs-up align-bottom" role="button" style="display:none; cursor: pointer;"></i>
+                                        </div>
+                        
+                                    </div>  
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12" id="timer" class="alert alert-info text-center"></div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div>
+                    <br>
+                    <p>AppMonsta currently provides information on gaming apps only.</p>
+                    <p>We are using OpenAI integrations as part of our platform so response times may vary.</p>
+                    <br>
+                    <br>
+                    <br>
+                    <p> </p>
+                </div>
+            
+
+                    <!-- <div id="message" class="alert alert-info text-center"></div>
+                    <div id="outcome" class="alert alert-info text-center"></div> -->
+            </div>
+            <!-- Footer -->
+            <footer class="footer mt-auto py-3 bg-light">
+                <div class="container">
+                    <ul class="list-inline text-center mb-0">
+                        <li class="list-inline-item text-muted">
+                            AppMonsta &copy; {{ current_year() }}
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('contact.index') }}">Contact</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('page.privacy') }}">Privacy Policy</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('page.terms') }}">Terms of Service</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('api.docs')}}">MonstaGPT API docs</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('api.appmonsta_docs')}}">AppMonsta API docs</a>
+                        </li>
+                    </ul>
+                </div>
+            </footer>       
+        </main>
+    </div>
+</div>
+
+
+
+
+
+  <!-- Modal -->
+  <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="feedbackModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form id="submitFeedback">
+                <div class="modal-header">
+                <h5 class="modal-title" id="feedbackModal">Question feedback</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-5card bg-light">
+                        {% call f.form_tag('gpt.main') %}
+                            {% call f.form_group(feedback_form.question,
+                                placeholder='The question asked',
+                                rows='1') %}
+                            {% endcall %}
+                            {% call f.form_group(feedback_form.answer,
+                                placeholder='The response',
+                                rows='1') %}
+                            {% endcall %}
+                            {% call f.form_group(feedback_form.thread_id) %}
+                            {% endcall %}
+            
+
+                        {% call f.form_group(feedback_form.message,
+                                            placeholder='Please describe the issue in as much detail as possible',
+                                            rows='5') %}
+                        {% endcall %}
+            
+                    </div>
+                    <div id="modalMessageDisplay"></div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" id="submitFeedbackButton" class="btn btn-primary">Send feedback</button>
+                        {% endcall %}
+                </div>
+                </form>
+            </div>
+        </div>
+  </div>
+            
+            
+                        <!-- End of modal code -->
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- JavaScript for AJAX -->
+    <!-- <script>
+        function addConversation() {
+            let conversationName = $("#conversation_name").val();
+            let data = { 'conversation_name': conversationName };
+            let csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            $.ajax({
+                url: "/gpt/create_new_conversation",
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(data) {
+                    // Append the new conversation to the table of conversations
+                    let table = $(".conversation-table");
+                    let row = $('<tr>');
+                    let checkboxCell = $('<td>').html('<label for="bulk_ids"></label><input class="js-checkbox-item" id="bulk_ids" name="bulk_ids" type="checkbox" value="' + data.conversation_uuid + '">');
+                    let nameCell = $('<td class="small">').html('<a href="/create_new_conversation/' + data.conversation_uuid + '">' + data.conversation_name + '</a>');
+                    
+                    row.append(checkboxCell);
+                    row.append(nameCell);
+                    table.append(row);
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    </script> -->
+<script>
+    function addConversation() {
+        let conversationName = document.getElementById("conversation_name").value;
+        let data = { 'conversation_name': conversationName };
+        let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        fetch("/gpt/create_new_conversation", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Append the new conversation to the table of conversations
+            let table = document.querySelector(".conversation-table");
+            let row = table.insertRow(-1);
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            cell2.innerHTML = `<a href="/create_new_conversation/${data.conversation_uuid}">${data.conversation_name}</a>`;
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    function timeAgo(date) {
+        const now = new Date();
+        const then = new Date(date);
+        const seconds = Math.round((now - then) / 1000);
+        const minutes = Math.round(seconds / 60);
+        const hours = Math.round(minutes / 60);
+        const days = Math.round(hours / 24);
+        const weeks = Math.round(days / 7);
+        const months = Math.round(days / 30);
+        const years = Math.round(days / 365);
+
+        if (seconds < 60) return `${seconds} seconds ago`;
+        if (minutes < 60) return `${minutes} minutes ago`;
+        if (hours < 24) return `${hours} hours ago`;
+        if (days < 7) return `${days} days ago`;
+        if (weeks < 4) return `${weeks} weeks ago`;
+        if (months < 12) return `${months} months ago`;
+        return `${years} years ago`;
+    }
+
+    function loadQuestions(conversationUuid) {
+    $('#suggested_questions_card').hide();
+    $('#previous_questions_card').show();
+    let formElement = document.querySelector('form');
+    formElement.setAttribute('data-selected-conversation', conversationUuid);
+    
+    fetch(`/gpt/get_questions/${conversationUuid}`)
+    .then(response => response.json())
+    .then(data => {
+        // Clear the table of current questions
+        let table = document.querySelector(".your-questions-table tbody");
+        table.innerHTML = "";
+        
+        // Add each question/answer to the table        
+        data.forEach(item => {
+            let row = table.insertRow(-1);
+            
+            let dateCell = row.insertCell(0);
+            dateCell.className = "small";
+            dateCell.innerHTML = `<time class="js-from-now" datetime="${item.date}">${timeAgo(item.date)}</time>`;
+            
+            let questionCell = row.insertCell(1);
+            questionCell.className = "small";
+            questionCell.innerHTML = item.question;
+            
+            let answerCell = row.insertCell(2);
+            answerCell.className = "small";
+            answerCell.innerHTML = item.answer;
+            });
+        })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+    }
+
+    function loadConversations() {
+        fetch('/gpt/list_conversations')
+        .then(response => response.json())
+        .then(data => {
+            let table = document.querySelector(".conversation-table tbody");
+            table.innerHTML = ""; // Clear current rows
+
+            data.forEach(conversation => {
+                let row = table.insertRow(-1);
+                
+                // Cell for checkbox
+                let cellCheckbox = row.insertCell(0);
+                cellCheckbox.innerHTML = `<label for="bulk_ids-${conversation.uuid}"></label><input class="js-checkbox-item" id="bulk_ids-${conversation.uuid}" name="bulk_ids" type="checkbox" value="${conversation.uuid}">`;
+
+                // Cell for conversation name and controls
+                let cellName = row.insertCell(1);
+                cellName.classList.add("small"); // Adding class for styling
+                cellName.innerHTML = `
+                    <a href="javascript:void(0);" id="nameSpan-${conversation.uuid}" onclick="loadQuestions('${conversation.uuid}')">${conversation.name}</a>
+                    <span onclick="editConversationName('${conversation.uuid}'); event.stopPropagation();"><i class="fa fa-edit"></i></span>
+                    <input type="text" id="editInput-${conversation.uuid}" value="${conversation.name}" style="display: none;">
+                    <button id="updateButton-${conversation.uuid}" onclick="updateConversationName('${conversation.uuid}')" style="display: none;">Update</button>
+                    <button id="cancelButton-${conversation.uuid}" onclick="cancelEditConversationName('${conversation.uuid}')" style="display: none;">Cancel</button>
+                    <br>
+                    ${conversation.updated_on}
+                `;
+            });
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+
+
+    function editConversationName(conversationUuid) {
+    // Hide the name span and show the input box and update button
+    const nameLink = document.getElementById(`nameSpan-${conversationUuid}`);
+    const editIcon = document.querySelector(`.conversation-table span[onclick="editConversationName('${conversationUuid}'); event.stopPropagation();"]`);
+    const editInput = document.getElementById(`editInput-${conversationUuid}`);
+    const updateButton = document.getElementById(`updateButton-${conversationUuid}`);
+    const cancelButton = document.getElementById(`cancelButton-${conversationUuid}`);
+
+    nameLink.style.display = 'none';  // <-- Ensure this is `nameLink`
+    editIcon.style.display = 'none';
+    editInput.style.display = 'block';
+    updateButton.style.display = 'block';
+    cancelButton.style.display = 'block';
+    }
+
+    function cancelEditConversationName(conversationUuid) {
+    // Get elements
+    const nameLink = document.getElementById(`nameSpan-${conversationUuid}`);
+    const editIcon = document.querySelector(`.conversation-table span[onclick="editConversationName('${conversationUuid}'); event.stopPropagation();"]`);
+    const editInput = document.getElementById(`editInput-${conversationUuid}`);
+    const updateButton = document.getElementById(`updateButton-${conversationUuid}`);
+    const cancelButton = document.getElementById(`cancelButton-${conversationUuid}`);
+
+    // Display the original name link and edit icon
+    nameLink.style.display = 'block';
+    editIcon.style.display = 'block';
+
+    // Hide the input, update, and cancel buttons
+    editInput.style.display = 'none';
+    updateButton.style.display = 'none';
+    cancelButton.style.display = 'none';
+    }
+
+
+    function updateConversationName(conversationUuid) {
+        console.log(conversationUuid);
+        const editInput = document.getElementById(`editInput-${conversationUuid}`);
+        const cancelButton = document.getElementById(`cancelButton-${conversationUuid}`);
+        const newName = editInput.value;
+        
+        let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        fetch(`/gpt/update-conversation-name/${conversationUuid}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ 'new_name': newName })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const nameSpan = document.getElementById(`nameSpan-${conversationUuid}`);
+                nameSpan.innerHTML = `${newName} <span onclick="editConversationName('${conversationUuid}'); event.stopPropagation();"><i class="fa fa-edit"></i></span>`;
+
+                const editInput = document.getElementById(`editInput-${conversationUuid}`);
+                const updateButton = document.getElementById(`updateButton-${conversationUuid}`);
+                
+                // Hide the input box and update button, show the name span
+                nameSpan.style.display = 'block';
+                editInput.style.display = 'none';
+                updateButton.style.display = 'none';
+                cancelButton.style.display = 'none';
+            } else {
+                console.error('Error updating conversation name:', data.error);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+let remainingTime = 0;
+const countdownElement = document.getElementById('countdown');
+const askQuestionButton = document.getElementById('askQuestionButton');
+let countdownIntervalId; // Store the interval ID for the countdown
+
+// Fetch the initial remaining time from the server
+fetch('/gpt/get_time_until_question')
+    .then(response => response.json())
+    .then(data => {
+        remainingTime = data.remaining_time;
+        updateCountdown();
+    });
+
+function updateCountdown() {
+    fetch('/gpt/get_time_until_question')
+        .then(response => response.json())
+        .then(data => {
+            const remainingTime = data.remaining_time;
+            const countdownElement = document.getElementById('countdown');
+            const askQuestionButton = document.getElementById('askQuestionButton');
+
+            if (remainingTime > 0) {
+                const minutes = Math.floor(remainingTime / 60);
+                const seconds = remainingTime % 60;
+                countdownElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                askQuestionButton.disabled = true;
+            } else {
+                countdownElement.textContent = 'Ready!';
+                askQuestionButton.disabled = false;
+                clearInterval(countdownIntervalId); // Stop the interval when countdown reaches zero
+            }
+        });
+}
+
+// Function to start the countdown
+function startCountdown() {
+    countdownIntervalId = setInterval(updateCountdown, 1000);
+    updateCountdown(); // Initial update
+}
+
+// Function to stop the countdown
+function stopCountdown() {
+    clearInterval(countdownIntervalId);
+}
+
+// Start the countdown initially
+startCountdown();
+
+var suggested_questions = {{ suggested_questions|safe }};
+$(document).ready(function() {
+    var taskId = null;
+    var userCoins = $('#user_coins');
+    var $messageStatus = $('#message');
+    var $responseStatus = $('#outcome');
+    var recentQuestionsSelector = '#recent_questions';
+    const askQuestionButton = document.getElementById('askQuestionButton');
+
+    $messageStatus.hide();
+    $responseStatus.hide();
+    $('#timer').hide();
+
+    let currentConversationID = null;  // to hold the ongoing conversation's ID
+    let isNewChat = false;  // to track if it's a new chat
+
+    // Event listener for the "New Chat" button
+    $('#newChatButton').on('click', function() {
+        $('#previous_questions_card').show();
+        $('#suggested_questions_card').hide();
+        // Clear the "your-questions-table" table
+        let table = document.querySelector(".your-questions-table tbody");
+        table.innerHTML = "";
+
+        // Reset the currentConversationID and isNewChat flag
+        currentConversationID = null;
+        isNewChat = true;
+
+         // Clear the contents of questionInput
+        $('#questionInput').val('');
+        // Get the first suggested answer
+        suggested_questions.forEach((item, index) => {
+            let row = table.insertRow(-1);
+
+            if (index === 0) {
+                let dateCell = row.insertCell(0);
+                dateCell.className = "small";
+                dateCell.innerHTML = `<time class="js-from-now" datetime="${new Date().toISOString()}">${timeAgo(new Date())}</time>`;
+
+                let questionCell = row.insertCell(1);
+                questionCell.className = "small";
+                questionCell.innerHTML = 'Please give me some example questions to ask';
+            } else {
+                // Create empty cells for date and question to keep the table structure consistent
+                row.insertCell(0);
+                row.insertCell(1);
+            }
+
+            let answerCell = row.insertCell(2);
+            answerCell.className = "small";
+            answerCell.innerHTML = item.question;
+        });
+    });
+
+    $('#askQuestionForm').on('submit', function(event) {
+        askQuestionButton.disabled = true;
+        $('#submitFeedbackButton').show(); // Hide the submit button immediately after form submission
+        $messageStatus.hide();
+        $responseStatus.hide();
+        var t=0;
+        function myTimer() {
+            $("#timer").html("<p>Waiting for response ... " + t + "s</p>").show();
+            t++;
+        }
+
+        const myInterval = setInterval(myTimer, 1000);
+
+        // Define the formElement here
+        const formElement = document.querySelector('form');
+
+        const question = document.querySelector('#questionInput').value;
+        let conversation;
+
+
+        // Only update currentConversationID if isNewChat is false
+        if (!isNewChat) {
+            conversation = currentConversationID || formElement.getAttribute('data-selected-conversation');
+        } else {
+            conversation = null;
+            isNewChat = false;  // Reset the flag after handling the "new chat"
+        }
+
+        $.ajax({
+            headers: {
+                "X-CSRFToken": $('meta[name=csrf-token]').attr('content'),
+                "Content-Type": "application/json"   // Set the content type to JSON
+            },
+                data: JSON.stringify({
+                    question: question,
+                    conversation: conversation
+                }),
+                type: 'POST',
+                url: '/gpt/handle_questions'
+            }).done(function(data) {
+                if (!currentConversationID) {
+                currentConversationID = data.conversation_id;  // set the ongoing conversation's ID after the first question
+                }
+                if(data.task_id) {
+                    taskId = data.task_id; // Store the task ID
+                    $('#cancelTaskButton').show(); // Show the cancel button
+                }
+                if (data.error) {
+                    $('#outcome').text(data.error).show();
+                    clearInterval(myInterval);
+                    t = 0;
+                    console.log(currentConversationID);
+                } else {
+                    taskId = data.task_id;
+                    var intervalId = setInterval(function() {
+                        
+                      
+                        
+                        $.getJSON('/gpt/result/' + taskId, function(data) {
+                        if (data.state == 'PENDING') {
+                            console.log("Task is pending...");
+                        } else if (data.state == 'SUCCESS') {
+                            clearInterval(intervalId);
+                            var response = data.result.response;  // response from the task
+                            userCoins.text(data.result['coins']);
+                            currentConversationID = data.result['conversation_uuid'];
+                            $(recentQuestionsSelector).show();
+                            var questionAsked = $('#questionInput').val();
+
+                            // Update the table with the new question and answer
+                            let table = document.querySelector(".your-questions-table tbody");
+                            let row = table.insertRow(0);
+
+                            let dateCell = row.insertCell(0);
+                            dateCell.className = "small";
+                            dateCell.innerHTML = `<time class="js-from-now" datetime="${new Date().toISOString()}">${timeAgo(new Date())}</time>`;
+
+                            let questionCell = row.insertCell(1);
+                            questionCell.className = "small";
+                            questionCell.innerHTML = questionAsked;
+
+                            let answerCell = row.insertCell(2);
+                            answerCell.className = "small";
+                            answerCell.innerHTML = response;
+
+                            $messageStatus.text("Here's your response!").show();
+                            $responseStatus.text(response).show();
+                            loadConversations();  // Update the list of conversations
+                            $('#suggested_questions_card').hide();
+                            $('#previous_questions_card').show();
+                            clearInterval(myInterval);
+                            t = 0;
+                            console.log(currentConversationID);
+
+                            // Now, set the modal fields with these values
+                            document.getElementById('modalQuestion').value = questionAsked;
+                            document.getElementById('modalAnswer').value = response;
+                            document.getElementById('modalThread').value = currentConversationID;
+
+                            // Show the buttons
+                            $('#thumbsUpButton').show(); 
+                            startCountdown();
+                            askQuestionButton.disabled = false;
+                        } else if (data.state == 'FAILURE') {
+                            askQuestionButton.disabled = false;
+                            clearInterval(intervalId);
+                            $messageStatus.text("There was an error processing the question, please try again.").show();
+                            clearInterval(myInterval);
+                            t = 0;
+                            console.log(currentConversationID);
+                        }
+                    });
+                    
+                        
+                    }, 1000);
+                }
+            });
+            event.preventDefault();
+        
+    });
+
+    $('#thumbsUpButton').on('click', function() {
+        $.ajax({
+            headers: {
+                "X-CSRFToken": $('meta[name=csrf-token]').attr('content'),
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+                question: $('#questionInput').val(),
+                answer: $('#modalAnswer').val(), // Adjust based on where you store the response
+                thread: currentConversationID
+            }),
+            type: 'POST',
+            url: '/gpt/thumbsup'
+        }).done(function(data) {
+            console.log('Data sent successfully');
+            // Handle success
+            $('#thumbsUpButton').hide(); // Optionally hide the icon again
+        }).fail(function(err) {
+            console.log('Error sending data', err);
+            // Handle error
+        });
+    });
+
+
+    $('#cancelTaskButton').on('click', function() {
+        if(taskId) {
+            console.log(taskId);
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": $('meta[name=csrf-token]').attr('content'),
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({
+                    task_id: taskId
+                }),
+                type: 'POST',
+                url: '/gpt/cancel_task' // The endpoint where you handle task cancellation
+            }).done(function(response) {
+                askQuestionButton.disabled = false;
+                // Handle the response from the cancellation endpoint
+                console.log('Task cancellation request sent.');
+                $('#cancelTaskButton').hide(); // Hide the cancel button
+                // Optionally reset the taskId and other UI elements as needed
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                // Handle error
+                askQuestionButton.disabled = false;
+                console.log('Error canceling task: ', textStatus);
+            });
+        }
+    });
+
+    // Assuming your form has an ID 'submitFeedback'
+    $('#submitFeedback').on('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Gather data
+    var feedback_question = $('#modalQuestion').val(); // Ensure you have inputs with these IDs
+    var feedback_thread = $('#modalThread').val(); // Assuming this captures the conversation ID
+    var feedback_answer = $('#modalAnswer').val();
+    var feedback_message = $('#modalMessage').val(); // Assuming you have an input for the message. Change the ID as necessary.
+    console.log(feedback_message);
+    // AJAX setup to send JSON data
+    $.ajax({
+        headers: {
+            "X-CSRFToken": $('meta[name=csrf-token]').attr('content'),
+            "Content-Type": "application/json"   // Set the content type to JSON
+        },
+        data: JSON.stringify({
+            question: feedback_question,
+            thread: feedback_thread,
+            answer: feedback_answer,
+            message: feedback_message
+            // Include any other data you need to send
+        }),
+        type: 'POST',
+        url: '/gpt/feedback',
+    }).done(function(data) {
+        // Assuming 'modalMessageDisplay' is an ID for a div to display the success message
+        $('#modalMessageDisplay').text('Thanks, message sent').show();
+        // Close the modal after a 2-second delay
+        setTimeout(function() {
+            $('#feedbackModal').hide(); // Correctly target the modal itself to hide
+            $('#modalMessageDisplay').hide(); // Optionally, hide the message div for next use
+            $('#submitFeedbackButton').hide(); // Hide the submit button immediately after form submission
+
+        }, 2000);
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        // Assuming 'modalMessageDisplay' is an ID for a div to display error messages
+        $('#modalMessageDisplay').text('An error occurred. Please try again.').show();
+    });
+});
+
+
+});
+
+
+</script>
+<script>
+    const buttons = document.querySelectorAll('.buy_now_btn');
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    buttons.forEach(button => {
+        button.addEventListener('click', event => {
+            const plan = button.getAttribute('data-plan');
+
+            fetch('/stripe/buy_gpt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ plan: plan })
+            })
+            .then((result) => { return result.json(); })
+            .then((data) => {
+                var stripe = Stripe(data.checkout_public_key);
+                stripe.redirectToCheckout({
+                    sessionId: data.checkout_session_id
+                }).then(function (result) {
+                    // If `redirectToCheckout` fails due to a browser or network
+                    // error, display the localized error message to your customer
+                    // using `result.error.message`.
+                });
+            });
+        });
+    });
+</script>
+<script src="https://js.stripe.com/v3/"></script>
+
+{% endblock %}
+
+

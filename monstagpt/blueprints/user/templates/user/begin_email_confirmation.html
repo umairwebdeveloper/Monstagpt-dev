@@ -1,0 +1,59 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form.html' as f with context %}
+
+{% block title %}Confirm your email{% endblock %}
+
+{% block body %}
+<div class="container-fluid h-100">
+    <div class="row h-100">
+      <div class="col-6 d-flex justify-content-center align-items-center bg-info"> <!-- Updated class -->
+        <div>
+            <img src="{{ static_url_for('static', filename='images/appmonstalogo_black.png') }}" alt="AppMonsta" class="img-fluid" style="width: 500px;"> <!-- Bootstrap's img-fluid -->
+        </div>
+      </div>
+
+        <div class="col-6 d-flex justify-content-center align-items-center">
+          <div class="form-container">
+            {% call f.form_tag('user.begin_email_confirmation') %}
+              <legend>Confirm your email</legend>
+              <p class="small help-block sm-margin-bottom">
+                Thank you for signing up to MonstaGPT.
+              </p>
+              <p class="small help-block sm-margin-bottom">
+                We'll send you an email shortly to verify your details. Please check your inbox for the message and follow the link to complete verification. 
+              </p>
+              <p class="small help-block sm-margin-bottom">
+                The link will expire in 1 hour. 
+                </p>
+              <p class="small help-block sm-margin-bottom">
+                Didn't receive the email? Click the button below to resend.
+              </p>
+              <p class="small help-block sm-margin-bottom">
+                Thanks.
+                MonstaGPT
+              </p>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="visible-xs visible-sm sm-margin-top">
+                    <a href="{{ url_for('user.logout') }}"
+                        class="btn btn-default btn-block">
+                      Logout
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <button type="submit" class="btn btn-primary btn-block">
+                    Resend
+                  </button>
+                </div>
+              </div>
+            {% endcall %}
+          </div>
+          {% block footer %}
+          {% endblock %}
+      </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,5 @@
+Contact us email received
+message from:
+{{user_email}}
+message:
+{{custom_message}}

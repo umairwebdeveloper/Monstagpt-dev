@@ -1,0 +1,59 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install SSH key
+      uses: webfactory/ssh-agent@v0.5.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Set up .env file
+      run: |
+        cp .env.example .env
+
+    - name: Docker login
+      run: echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+    - name: Build Docker images
+      run: |
+        docker-compose build --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+
+    - name: Tag Docker images (if needed)
+      run: |
+        docker tag mattairnow/monstagpt:worker mattairnow/monstagpt:worker1
+
+    - name: Push Docker images
+      run: |
+        docker push mattairnow/monstagpt:web
+        docker push mattairnow/monstagpt:worker1
+        docker push mattairnow/monstagpt:webpack
+        docker push mattairnow/monstagpt:worker2
+
+    - name: SSH and deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no ubuntu@34.235.169.206 <<EOF
+          cd gpt
+          git fetch origin main
+          git reset --hard origin/main
+          docker-compose pull
+          docker-compose down
+          sleep 10  # waits for 20 seconds
+          docker-compose up -d
+          docker system prune -f # cleans up old images and containers
+          docker-compose build worker1
+          docker-compose restart worker1
+          docker-compose up -d worker1
+          docker-compose up -d worker1  # Start worker1 container if not running
+        EOF
+

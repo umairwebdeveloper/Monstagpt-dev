@@ -1,0 +1,25 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/form.html' as f with context %}
+
+{% block title %}Update GPT Instructions{% endblock %}
+{% block meta_description %}Form for updatting gpt instructions.{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2 card bg-light">
+        {% call f.form_tag('admin.instructions_update') %}
+
+          {% call f.form_group(form.instructions,
+                               placeholder='The more we know, the easier it will be to help you',
+                               rows='200') %}
+          {% endcall %}
+
+          <button type="submit" class="btn btn-primary mb-3">
+            Update instructions!
+          </button>
+        {% endcall %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

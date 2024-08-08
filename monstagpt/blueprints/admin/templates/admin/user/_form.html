@@ -1,0 +1,197 @@
+{% import 'macros/form.html' as f with context %}
+
+{% if request.endpoint.endswith('new') %}
+  {% set endpoint = 'admin.users_new' %}
+  {% set form_kwargs = {} %}
+  {% set legend = 'Add a new user' %}
+  {% set button = 'Add' %}
+{% else %}
+  {% set endpoint = 'admin.users_edit' %}
+  {% set form_kwargs = {'id': user.id} %}
+  {% set legend = 'Update this user' %}
+  {% set button = 'Save' %}
+{% endif %}
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    {% include 'layouts/_sidebar.html' %}
+        <!-- Main content -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 bg-light d-flex flex-column" style="padding: 0px; min-height: 100vh;">
+          <div class="text-white mt-0">
+                    {% include 'layouts/_topnav.html' %}
+          </div>
+
+
+          <div class="row">
+            <div class="col-md-5 card bg-light">
+              {% call f.form_tag(endpoint, **form_kwargs) %}
+                <h2 class="mb-4">{{ legend }}</h2>
+                <div class="form-group">
+                  <label class="control-label"><strong>Registered</strong></label>
+                  <p class="form-control-static">
+                    <time class="js-from-now" data-datetime="{{ user.created_on }}">
+                      {{ user.created_on }}
+                    </time>
+                  </p>
+                </div>
+                <div class="form-group">
+                  <label class="control-label"><strong>E-mail address</strong></label>
+                  <p class="form-control-static">
+                    {{ user.email }}
+                  </p>
+                </div>
+                <div class="form-group">
+                  <label class="control-label"><strong>Last GPT question on</strong></label>
+                  <p class="form-control-static">
+                    {% if last_question_on %}
+                    <time class="js-from-now" data-datetime="{{ last_question_on }}">
+                      {{ last_question_on }}
+                    </time>
+                    {% else %}
+                    Not asked any questions
+                    {% endif %}
+                  </p>
+                </div>
+
+                {% call f.form_group(form.subscribed_coins, autofocus='autofocus') %}{% endcall %}
+
+                {% call f.form_group(form.bought_coins, autofocus='autofocus') %}{% endcall %}
+
+                {% call f.form_group(form.free_coins, autofocus='autofocus') %}{% endcall %}
+
+                {% call f.form_group(form.requested_tokens) %}{% endcall %}
+
+                {% call f.form_group(form.insights_keys) %}{% endcall %}
+
+                {% call f.form_group(form.data_marketplace_bucket) %}{% endcall %}
+                
+                {% call f.form_group(form.username) %}{% endcall %}
+
+                {% call f.form_group(form.role) %}{% endcall %}
+
+                {% call f.form_group(form.active) %}{% endcall %}
+
+                <hr/>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <button type="submit" class="btn btn-primary btn-block">
+                      {{ button }}
+                    </button>
+                  </div>
+                  <div class="col-md-6">
+                    <a href="{{ url_for('admin.users') }}"
+                        class="btn btn-outline-secondary btn-block">
+                      Cancel
+                    </a>
+                  </div>
+                </div>
+              {% endcall %}
+            </div>
+            <div class="col-md-5 offset-md-2">
+              <h2 class="mb-4">Billing details</h2>
+              <div class="card">
+                <div class="card-body">
+                  <dl class="mb-0">
+                    {% if user.subscription %}
+                      <dt>Subscribed</dt>
+                      <dd>
+                        <time class="js-from-now"
+                              data-datetime="{{ user.subscription.created_on }}">
+                          {{ user.subscription.created_on }}
+                        </time>
+                        (<a href="{{ url_for('admin.invoices', q=user.email)}}">
+                          View billing details
+                        </a>)
+                      </dd>
+                      <dt>Plan</dt>
+                      <dd>
+                        {{ user.subscription.plan | title }}
+                        {% if user.subscription.coupon %}
+                          <span class="small text-muted">
+                            (coupon: {{ user.subscription.coupon }})
+                          </span>
+                        {% endif %}
+                      </dd>
+                      
+                      {% call f.form_tag('admin.users_cancel_subscription') %}
+                        <input type="hidden" id="id" name="id" value="{{ user.id }}"/>
+                        <button type="submit" class="btn btn-primary mt-3">
+                          <img src="{{ static_url_for('static', filename='images/spinner.gif') }}"
+                              class="spinner"
+                              width="16" height="11" alt="Spinner"/>
+                            Cancel subscription
+                        </button>
+                      {% endcall %}
+                    {% else %}
+                      {% if user.cancelled_subscription_on %}
+                        <dt>Cancelled</dt>
+                        <dd>
+                          <time class="js-from-now"
+                                data-datetime="{{ user.cancelled_subscription_on }}">
+                            {{ user.cancelled_subscription_on }}
+                          </time>
+                        {% if user.invoices %}
+                          (<a href="{{ url_for('admin.invoices', q=user.email)}}">
+                            View billing details
+                          </a>)
+                        {% endif %}
+                        </dd>
+                      {% else %}
+                        <p class="mb-0">
+                          This user is not subscribed.
+                          {% if user.invoices %}
+                            (<a href="{{ url_for('admin.invoices', q=user.email)}}">
+                              View billing details
+                            </a>)
+                          {% endif %}
+                          </p>
+                      {% endif %}
+                    {% endif %}
+                  </dl>
+                </div>
+              </div>
+              <h2 class="mb-4 mt-5">Login activity</h2>
+              <div class="card">
+                <div class="card-body">
+                  <dl class="mb-0">
+                    <dt>Sign in count</dt>
+                    <dd>{{ user.sign_in_count }}</dd>
+                    <dt>Current sign in date</dt>
+                    <dd>
+                      {% if user.current_sign_in_on %}
+                        <time class="js-from-now"
+                              data-datetime="{{ user.current_sign_in_on }}">
+                          {{ user.current_sign_in_on }}
+                        </time>
+                      {% endif %}
+                    </dd>
+                    <dt>Current sign in IP address</dt>
+                    <dd>{{ user.current_sign_in_ip }}</dd>
+                    <dt>Previous sign in date</dt>
+                    <dd>
+                      {% if user.last_sign_in_on %}
+                        <time class="js-from-now"
+                              data-datetime="{{ user.last_sign_in_on }}">
+                          {{ user.last_sign_in_on }}
+                        </time>
+                      {% endif %}
+                    </dd>
+                    <dt>Previous sign in IP address</dt>
+                    <dd>{{ user.last_sign_in_ip }}</dd>
+                    <dt>Confirmed email?</dt>
+                    <dd>{{ user.account_is_confirmed }}</dd>
+                    <dd class="sm-margin-bottom">
+                      {% if user.account_is_confirmed %}
+                        <dt>Email confirmed on:</dt>
+                        <dd>{{ user.account_confirmed_on }}</dd>
+                      {% endif %}
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/items.html' as items %}
+{% import 'macros/form.html' as f with context %}
+{% block title %}Questions history{% endblock %}
+
+{% block body %}
+
+    <meta name="csrf-token" content="{{ form.csrf_token._value() }}">   
+    <h1>Suggested Questions</h1>
+    
+    <!-- Form to add a new item -->
+    <form method="POST" action="/admin/suggested/add">
+        {{ form.csrf_token }}
+        <input type="text" name="name" placeholder="New item name">
+        <button type="submit">Add</button>
+    </form>
+    
+    <!-- List of items -->
+    <ul id="item-list">
+        {% for item in item_list %}
+            <li id="item-{{ item.id }}">
+                {{ item.question }}
+                <form method="POST" action="/admin/suggested/update/{{ item.id }}">
+                    {{ form.csrf_token }}  <!-- Include CSRF token here -->
+                    <input type="text" name="new_name" placeholder="New name">
+                    <button type="submit">Update</button>
+                </form>
+                <form method="POST" action="/admin/suggested/delete/{{ item.id }}">
+                    {{ form.csrf_token }}  <!-- Include CSRF token here as well -->
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+ 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+
+        $(function() {
+            $("#item-list").sortable({
+                update: function(event, ui) {
+                    var itemOrder = $(this).sortable("toArray");
+                    var csrf_token = $("#csrf_token").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/suggested/reorder",
+                        data: { order: itemOrder },
+                        beforeSend: function(xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                },
+                        success: function(response) {
+                            // Handle success if needed
+                        },
+                        error: function(error) {
+                            // Handle error if needed
+                            console.log(error);
+                        }
+                    });
+                }
+            });
+            $("#item-list").disableSelection();
+        });
+
+
+    </script>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const itemSortable = document.querySelector("#item-list");
+        itemSortable.addEventListener("sortupdate", handleSortUpdate);
+
+        function handleSortUpdate(event) {
+            const itemOrder = Array.from(itemSortable.children).map(item => item.id);
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+            
+            fetch("/admin/suggested/reorder", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken
+                },
+                body: JSON.stringify({ order: itemOrder })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle success if needed
+                console.log("Success");
+            })
+            .catch(error => {
+                // Handle error if needed
+                console.error(error);
+            });
+        }
+    });
+</script>
+
+
+
+
+{% endblock %}

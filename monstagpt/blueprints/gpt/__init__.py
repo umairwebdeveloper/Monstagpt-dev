@@ -1,0 +1,1 @@
+from monstagpt.blueprints.gpt.views import gpt

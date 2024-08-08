@@ -1,0 +1,64 @@
+name: Deploy to Development EC2
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install SSH key
+      uses: webfactory/ssh-agent@v0.5.0
+      with:
+        ssh-private-key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
+
+    - name: Set up .env file
+      run: |
+        cp .env.example .env
+
+    - name: Docker login
+      run: echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+    - name: Build Docker images
+      run: |
+        docker-compose build --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+
+    - name: Tag Docker images
+      run: |
+        docker tag mattairnow/monstagpt:web mattairnow/monstagpt:web-dev
+        docker tag mattairnow/monstagpt:worker mattairnow/monstagpt:worker-dev
+        docker tag mattairnow/monstagpt:webpack mattairnow/monstagpt:webpack-dev
+        docker tag mattairnow/monstagpt:worker2 mattairnow/monstagpt:worker2-dev
+
+    - name: Verify Docker images
+      run: |
+        docker images
+
+    - name: Push Docker images
+      run: |
+        docker push mattairnow/monstagpt:web-dev
+        docker push mattairnow/monstagpt:worker-dev
+        docker push mattairnow/monstagpt:webpack-dev
+        docker push mattairnow/monstagpt:worker2-dev
+
+    - name: SSH and deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no ubuntu@3.81.167.55 <<EOF
+          cd gpt
+          git fetch origin dev
+          git reset --hard origin/dev
+          docker-compose pull
+          docker-compose down
+          sleep 10
+          docker-compose up -d
+          docker system prune -f
+          docker-compose build worker1
+          docker-compose restart worker1
+          docker-compose up -d worker1
+        EOF

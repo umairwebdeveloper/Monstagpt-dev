@@ -1,0 +1,407 @@
+{% extends 'layouts/app.html' %}
+{% import 'macros/form.html' as f with context %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+{% endblock %}
+
+{% block body %}
+<style>
+    .container-top {
+        background-color: #AECDE2; /* Adjust the blue shade if necessary */
+        /* Optional: Add shadow or other effects */
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding-left: 8.3%;
+        padding-right: 5%;
+        margin-top: 0;
+    }
+
+    body, html {
+        height: 100%;
+    }
+
+    .container-fluid {
+        min-height: 100%;
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .flex-grow-1 {
+        flex-grow: 1;
+    }
+
+    .footer {
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .footer ul {
+        margin-bottom: 0;
+    }
+
+    .footer a {
+        color: #6c757d;
+    }
+
+    .footer a:hover {
+        color: #343a40;
+        text-decoration: none;
+    }
+
+/* Page speciific styles */
+    .app-table {
+        border-collapse: separate;
+        border-spacing: 0 2px;
+    }
+
+    .app-table tbody tr:nth-child(even) {
+        background-color: #fff;
+    }
+
+    .app-table tbody tr:nth-child(odd) {
+        background-color: #fff9e6;
+    }
+
+    .app-table tbody tr td {
+        padding: 10px;
+    }
+
+    .app-icon {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    .app-info {
+        display: flex;
+        align-items: center;
+    }
+    .app-details {
+        margin-left: 10px;
+        flex-grow: 1;
+    }
+    .app-name {
+        font-weight: bold;
+        color: #0066cc;
+    }
+    .publisher {
+        font-size: 0.8em;
+        color: #666;
+    }
+    .rating {
+        color: #f8ce0b;
+        text-align: right;
+        white-space: nowrap; /* Ensure rating stays on one line */
+    }
+    .rating .fas, .rating .far {
+        font-size: 0.7em; /* Reduce size of star icons */
+    }
+    .rating-number {
+        color: #333;
+        font-size: 0.7em; /* Reduce size of rating number */
+        margin-left: 2px;
+    }
+    .app-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+    .price-info {
+        font-size: 0.8em;
+        color: #666;
+    }
+    .app-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2px;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        {% include 'layouts/_sidebar.html' %}
+        
+
+        <!-- Main content -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 bg-light d-flex flex-column" style="padding: 0px; min-height: 100vh;">
+            <div class="text-white mt-0">
+                {% include 'layouts/_topnav.html' %}
+            </div>
+
+            <div class="container-top text-white py-3 mb-4 mt-0">
+                <div class="blue-box ml-8 mr-8">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="heading text-dark">Unlock App Market Insights with AppMonsta Ignite</h1>
+                            <h2 class="subheading text-secondary">Power your success</h2>
+                            <p>Browse Google Play top charts by country, category, and date. See the top paid apps, free apps, and grossing apps</p>
+                        </div>
+                        <div class="col-2 text-center">
+                            <img src="{{ static_url_for('static', filename='images/dashboard.svg') }}" alt="Terminal interface" class="img-fluid" style="width: 50%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+                <div class="flex-grow-1">
+                    <div class="card col-md-10 offset-md-1 mt-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- Top Charts Section -->
+                                <div class="pt-3 pb-2 mb-3">
+                                    <h2 class="h4">Top Charts</h2>
+                                    <p class="text-muted">Browse Google Play top charts by country, category, and date. See the top paid apps, free apps, and grossing apps.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <!-- Filter Dropdowns with Submit Button -->
+                                <form id="filters-form" action="" method="POST">
+                                    <div class="row mb-4">
+                                        <div class="col-md-2">
+                                            <select class="form-control" id="platform-dropdown">
+                                                <option value="">Platform</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <select class="form-control" id="country-dropdown">
+                                                <option value="">Country</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <select class="form-control" id="category-dropdown">
+                                                <option value="">Category</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input type="date" id="date-picker" name="date" class="form-control">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="btn btn-primary" type="submit">Apply Filters</button>
+                                        </div>
+                                    </div>
+                                </form> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4" id="free-apps-container">
+                                    <h4>Top Free Apps</h4>
+                                    <table class="table app-table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>App</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Rows will be dynamically inserted here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-4" id="paid-apps-container">
+                                    <h4>Top Paid Apps</h4>
+                                    <table class="table app-table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>App</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Rows will be dynamically inserted here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-4" id="grossing-apps-container">
+                                    <h4>Top Grossing Apps</h4>
+                                    <table class="table app-table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>App</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Rows will be dynamically inserted here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <p> </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>     
+                <footer class="footer mt-auto py-3 bg-light">
+                    <div class="container">
+                        <ul class="list-inline text-center mb-0">
+                            <li class="list-inline-item text-muted">
+                                AppMonsta &copy; {{ current_year() }}
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="{{ url_for('contact.index') }}">Contact</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="{{ url_for('page.privacy') }}">Privacy Policy</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="{{ url_for('page.terms') }}">Terms of Service</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="{{ url_for('api.docs')}}">MonstaGPT API docs</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="{{ url_for('api.appmonsta_docs')}}">AppMonsta API docs</a>
+                            </li>
+                        </ul>
+                    </div>
+                </footer>
+        </main>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+    $(document).ready(function() {
+    // Setup AJAX with CSRF Token
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // date picker setup
+        document.addEventListener('DOMContentLoaded', function () {
+            var datePicker = document.getElementById('date-picker');
+            var today = new Date();
+            var twoYearsAgo = new Date(new Date().setFullYear(today.getFullYear() - 2));
+
+            datePicker.setAttribute('max', today.toISOString().split('T')[0]);  // today's date
+            datePicker.setAttribute('min', twoYearsAgo.toISOString().split('T')[0]);  // two years ago
+        });       
+
+        $.ajaxSetup({
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRFToken", csrfToken);
+            }
+        });
+        $.ajax({
+            url: '/dashboard/dropdowns',  // Adjusted URL to new endpoint
+            method: 'GET',
+            success: function(data) {
+                // Populate platforms dropdown
+                data.platforms.forEach(function(platform) {
+                    $('#platform-dropdown').append(new Option(platform.name, platform.value));
+                });
+                // Populate countries dropdown
+                data.countries.forEach(function(country) {
+                    $('#country-dropdown').append(new Option(country.name, country.value));
+                });
+                // Additional dropdowns can be populated similarly
+                data.categories.forEach(function(category) {
+                    $('#category-dropdown').append(new Option(category.name, category.value));
+                });
+                data.dates.forEach(function(date) {
+                    $('#date-dropdown').append(new Option(date.name, date.value));
+                });
+            },
+            error: function() {
+                console.log('Error fetching data');
+            }
+        });
+    });
+
+
+    function updateAppTables(freeApps, paidApps, grossingApps) {
+        function generateTableRows(apps, type) {
+            if (!apps || !Array.isArray(apps)) {
+                console.error('Invalid apps data:', apps);
+                return '<tr><td colspan="2">No data available</td></tr>';
+            }
+            return apps.map((app, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>
+                        <div class="app-row">
+                            <div class="app-info">
+                                <img src="${app.icon}" alt="${app.name}" class="app-icon">
+                                <div class="app-details">
+                                    <div class="app-name">${app.name}</div>
+                                    <div class="publisher">${app.publisher}</div>
+                                    <div class="app-meta">
+                                        <div class="rating">
+                                            ${getStarRating(app.rating)}
+                                            <span class="rating-number">(${parseFloat(app.rating).toFixed(1)})</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+
+        function getStarRating(rating) {
+            const roundedRating = Math.round(parseFloat(rating));
+            return Array(5).fill().map((_, i) => 
+                `<i class="fa${i < roundedRating ? 's' : 'r'} fa-star"></i>`
+            ).join('');
+        }
+
+        $('#free-apps-container table tbody').html(generateTableRows(freeApps));
+        $('#paid-apps-container table tbody').html(generateTableRows(paidApps));
+        $('#grossing-apps-container table tbody').html(generateTableRows(grossingApps));
+    }
+
+    $('#filters-form').on('submit', function(e) {
+        e.preventDefault();
+        
+        var formData = {
+            platform: $('#platform-dropdown').val(),
+            country: $('#country-dropdown').val(),
+            category: $('#category-dropdown').val(),
+            date: $('#date-picker').val()
+        };
+        let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        $.ajax({
+            url: '/dashboard/get-apps-data',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            dataType: 'json',
+            headers: {
+                "X-CSRFToken": csrfToken
+            },
+            success: function(response) {
+                updateAppTables(response.freeApps, response.paidApps, response.grossingApps);
+            },
+            error: function() {
+                alert('Failed to fetch data. Please try again.');
+            }
+        });
+    });
+
+
+</script>
+{% endblock %}
