@@ -25,25 +25,25 @@ var common = {
           'sass-loader'
         ]
       },
-      {
-        test: /\.(png|jpg|gif|svg)$/,
-        exclude: /fonts/,
-        use: [
-          {loader: 'file-loader?name=/images/[name].[ext]'}
-        ]
-      },
-      {
-        test: /\.(ttf|eot|svg|woff2?)$/,
-        exclude: /images/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]',
-            outputPath: 'fonts/',
-            publicPath: '../fonts'
-          }
-        }]
-      }
+      // {
+      //   test: /\.(png|jpg|gif|svg)$/,
+      //   exclude: /fonts/,
+      //   use: [
+      //     {loader: 'file-loader?name=/images/[name].[ext]'}
+      //   ]
+      // },
+      // {
+      //   test: /\.(ttf|eot|svg|woff2?)$/,
+      //   exclude: /images/,
+      //   use: [{
+      //     loader: 'file-loader',
+      //     options: {
+      //       name: '[name].[ext]',
+      //       outputPath: 'fonts/',
+      //       publicPath: '../fonts'
+      //     }
+      //   }]
+      // }
     ]
   },
   optimization: {
@@ -62,7 +62,6 @@ module.exports = [
     ],
     output: {
       path: __dirname + '/../public',
-      filename: 'js/app.js'
     },
     resolve: {
       modules: [

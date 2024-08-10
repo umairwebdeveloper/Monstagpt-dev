@@ -393,7 +393,13 @@ def settings():
             db.session.commit()
             flash('Your subscription has expired','error')
         user_plan = current_user.subscription.plan
-    rate_limit = ProductCatalog.query.filter_by(tier=user_plan).first().rate_limit_seconds
+    # rate_limit = ProductCatalog.query.filter_by(tier=user_plan).first().rate_limit_seconds
+    product_catalog = ProductCatalog.query.filter_by(tier=user_plan).first()
+    if product_catalog:
+        rate_limit = product_catalog.rate_limit_seconds
+    else:
+        # If the user has a subscription plan that is not in the product catalog, set the rate limit to 10
+        rate_limit = 10
     delete_forms = [DeleteKeyForm(api_key=key.api_key) if current_user.api else None for key in current_user.api]
     return render_template("user/settings.html",delete_forms=delete_forms,user_plan=user_plan,rate_limit=rate_limit)
 

@@ -99,8 +99,13 @@ def get_time_until_question():
     subscription_name = 'Free'
     if current_user.subscription:
         subscription_name = current_user.subscription.plan
-    product_catalog = ProductCatalog()
-    rate_limit = product_catalog.query.filter_by(tier=subscription_name).first().rate_limit_seconds
+    product_catalog = ProductCatalog.query.filter_by(tier=subscription_name).first()
+    
+    if product_catalog:
+        rate_limit = product_catalog.rate_limit_seconds
+    else:
+        # Adding fixed value in case of product catalog not found
+        rate_limit = 10
 
 
     elapsed_time = current_time - last_question_time
@@ -195,8 +200,14 @@ def main():
         # User has never subscribed, plan is free by default
         plan = 'Free'
 
-    rate_limit = ProductCatalog.query.filter_by(tier=plan).first().rate_limit_seconds
+    product_catalog = ProductCatalog.query.filter_by(tier=plan).first()
     
+    if product_catalog:
+        rate_limit = product_catalog.rate_limit_seconds
+    else:
+        # Adding fixed value in case of product catalog not found
+        rate_limit = 10
+        
     bulk_form = BulkDeleteForm()
     form = ConversationForm()
     feedback_form = FeedbackForm()

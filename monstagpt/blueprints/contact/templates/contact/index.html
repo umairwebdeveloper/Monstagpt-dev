@@ -1,22 +1,19 @@
-{% extends 'layouts/app.html' %}
-{% import 'macros/form.html' as f with context %}
-
-{% block title %}Contact us with your feedback or issues{% endblock %}
-{% block meta_description %}Contact our customer service department with any
-questions or concerns.{% endblock %}
-
-{% block body %}
+{% extends 'layouts/app.html' %} {% import 'macros/form.html' as f with context
+%} {% block title %}Contact us with your feedback or issues{% endblock %} {%
+block meta_description %}Contact our customer service department with any
+questions or concerns.{% endblock %} {% block body %}
 <style>
-  /* Existing styles */
-  .container-top {
-        background-color: #AECDE2;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    /* Existing styles */
+    .container-top {
+        background-color: #aecde2;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         padding-left: 8.3%;
         padding-right: 5%;
         margin-top: 0;
     }
 
-    body, html {
+    body,
+    html {
         height: 100%;
     }
 
@@ -54,59 +51,67 @@ questions or concerns.{% endblock %}
 </style>
 
 <div class="container-fluid">
-  <div class="row">
-      <!-- Sidebar -->
-      {% include 'layouts/_sidebar.html' %}
-      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 bg-light d-flex flex-column" style="padding: 0px; min-height: 100vh;">
-        <div class="text-white mt-0">
-          {% include 'layouts/_topnav.html' %}
-        </div>
-        <div class="flex-grow-1">
-          <div class="col-md-8 offset-md-2 card bg-light">
-            {% call f.form_tag('contact.index') %}
-              <h2 class="mt-2 mb-4">Have a question?</h2>
+    <div class="row">
+        <!-- Sidebar -->
 
-              {% call f.form_group(form.email, placeholder='E-mail address') %}
-              {% endcall %}
+        <main
+            role="main"
+            class="col-md-9 ml-sm-auto col-lg-10 bg-light d-flex flex-column"
+            style="padding: 0px; min-height: 100vh"
+        >
+            <div class="text-white mt-0"></div>
+            <div class="flex-grow-1">
+                <div class="col-md-8 offset-md-2 card bg-light">
+                    {% call f.form_tag('contact.index') %}
+                    <h2 class="mt-2 mb-4">Have a question?</h2>
 
-              {% call f.form_group(form.message,
-                                    placeholder='The more we know, the easier it will be to help you',
-                                    rows='12') %}
-              {% endcall %}
+                    {% call f.form_group(form.email, placeholder='E-mail
+                    address') %} {% endcall %} {% call
+                    f.form_group(form.message, placeholder='The more we know,
+                    the easier it will be to help you', rows='12') %} {% endcall
+                    %}
 
-              <button type="submit" class="btn btn-primary mb-3">
-                Send e-mail
-              </button>
-            {% endcall %}
-          </div>
-        </div>
-        <!-- Footer -->
-        <footer class="footer mt-auto py-3 bg-light">
-          <div class="container">
-              <ul class="list-inline text-center mb-0">
-                  <li class="list-inline-item text-muted">
-                      AppMonsta &copy; {{ current_year() }}
-                  </li>
-                  <li class="list-inline-item">
-                      <a href="{{ url_for('contact.index') }}">Contact</a>
-                  </li>
-                  <li class="list-inline-item">
-                      <a href="{{ url_for('page.privacy') }}">Privacy Policy</a>
-                  </li>
-                  <li class="list-inline-item">
-                      <a href="{{ url_for('page.terms') }}">Terms of Service</a>
-                  </li>
-                  <li class="list-inline-item">
-                      <a href="{{ url_for('api.docs')}}">MonstaGPT API docs</a>
-                  </li>
-                  <li class="list-inline-item">
-                      <a href="{{ url_for('api.appmonsta_docs')}}">AppMonsta API docs</a>
-                  </li>
-              </ul>
-          </div>
-        </footer>
-      </main>
-  </div>
+                    <button type="submit" class="btn btn-primary mb-3">
+                        Send e-mail
+                    </button>
+                    {% endcall %}
+                </div>
+            </div>
+            <!-- Footer -->
+            <footer class="footer mt-auto py-3 bg-light">
+                <div class="container">
+                    <ul class="list-inline text-center mb-0">
+                        <li class="list-inline-item text-muted">
+                            AppMonsta &copy; {{ current_year() }}
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('contact.index') }}">Contact</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('page.privacy') }}"
+                                >Privacy Policy</a
+                            >
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('page.terms') }}"
+                                >Terms of Service</a
+                            >
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('api.docs')}}"
+                                >MonstaGPT API docs</a
+                            >
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="{{ url_for('api.appmonsta_docs')}}"
+                                >AppMonsta API docs</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </footer>
+        </main>
+    </div>
 </div>
 
 {% endblock %}

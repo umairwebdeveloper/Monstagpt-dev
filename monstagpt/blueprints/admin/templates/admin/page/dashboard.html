@@ -3,78 +3,11 @@
 {% import 'macros/form.html' as f with context %}
 {% block body %}
 
-<style>
-
-/* Existing styles */
-.container-top {
-      background-color: #AECDE2;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      padding-left: 8.3%;
-      padding-right: 5%;
-      margin-top: 0;
-  }
-
-  body, html {
-      height: 100%;
-  }
-
-  .container-fluid {
-      min-height: 100%;
-  }
-
-  main {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-  }
-
-  .flex-grow-1 {
-      flex-grow: 1;
-  }
-
-  .footer {
-      background-color: #f8f9fa;
-      border-top: 1px solid #dee2e6;
-  }
-
-  .footer ul {
-      margin-bottom: 0;
-  }
-
-  .footer a {
-      color: #6c757d;
-  }
-
-  .footer a:hover {
-      color: #343a40;
-      text-decoration: none;
-  }
-
-  /* Page specific styles */
-  #item-list {
-      list-style-type: none;
-      padding-left: 0;  
-  }
-
-  input[name="name"] {
-        width: 400px; 
-    }
-
-  #item-list input[type="text"] {
-      width: 400px;  
-  }
-</style>
-
-
 <div class="container-fluid">
   <div class="row">
     <!-- Sidebar -->
-    {% include 'layouts/_sidebar.html' %}
     <!-- Main content -->
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 bg-light d-flex flex-column" style="padding: 0px; min-height: 100vh;">
-      <div class="text-white mt-0">
-        {% include 'layouts/_topnav.html' %}
-      </div>
       <div class="flex-grow-1">
         <div class="card col-md-10 offset-md-1">
             <div class="card-body">

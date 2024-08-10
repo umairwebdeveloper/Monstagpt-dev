@@ -1,0 +1,151 @@
+{% import 'macros/flash.html' as flash with context %}
+{% import 'billing/macros/billing.html' as billing with context %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+          content="{% block meta_description %}{% endblock %}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{% block title %}{% endblock %}</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ static_url_for('static', filename='css/app.css') }}">
+    <script defer src="{{ static_url_for('static', filename='js/app.js') }}"></script>
+    <script src="https://js.stripe.com/v2/"></script>
+
+    {% if config['ANALYTICS_GOOGLE_UA'] %}
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', "{{ config['ANALYTICS_GOOGLE_UA'] }}", 'auto');
+        ga('send', 'pageview');
+      </script>
+    {% endif %}
+    {% block head_extra %}
+
+    {% endblock %}  <!-- Placeholder for extra head content -->
+    
+      <!-- Google Tag Manager -->
+      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MPRNMXW4');</script>
+        <!-- End Google Tag Manager -->
+    
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      
+      footer.footer {
+          background-color: #ffffff; /* Ensures the footer is white */
+      }
+    
+      .container-fluid {
+      display: flex;
+      flex-direction: column; /* Stack vertically */
+      height: 100%;
+      }
+      
+      main[role="main"] {
+        flex: 1;  /* Takes up all available space */
+        background-color: #f8f9fa; /* Ensure this is the grey color */
+        min-height: 100vh; /* Ensures at least the height of the viewport */
+      }
+
+      .btn-primary:hover,
+      .btn-primary:focus,
+
+      .btn-primary {
+        background-color: #F5D39D;
+        border: #F5D39D;
+        color: #ffffff; 
+      }
+
+      .am-secondary-btn {
+      display: inline-block;
+      font-weight: 400;
+      color: #F5D39D;
+      text-align: center;
+      vertical-align: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      border: 1px solid;
+      border-color: #F5D39D;
+      padding: .375rem .75rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-radius: .25rem;
+      background-color: white;
+    }
+
+    .am-blue-btn
+    {
+      display: inline-block;
+      font-weight: 400;
+      color: white;
+      text-align: center;
+      vertical-align: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      border: 1px solid;
+      border-color: #6BC5EA;
+      padding: .375rem .75rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-radius: .25rem;
+      background-color: #6BC5EA;
+    }
+
+
+    .am-badge {
+    display: inline-block;
+    padding: .25em .4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+    color: white;
+    background-color: #6BC5EA;
+  }
+    </style>
+
+  </head>
+  <body>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MPRNMXW4"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    {% block header %}{% endblock %}
+
+    <main>
+      {{ flash.render() }}
+      {% block body %}{% endblock %}
+    </main>
+
+
+    {% block footer %}{% endblock %}
+
+  </body>
+</html>

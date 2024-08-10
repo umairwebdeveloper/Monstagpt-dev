@@ -133,58 +133,589 @@
     }
 </style>
 
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        {% include 'layouts/_sidebar.html' %}
-
-        <!-- Main content -->
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 bg-light d-flex flex-column" style="padding: 0px; min-height: 100vh;">
-            <div class="text-white mt-0">
-                {% include 'layouts/_topnav.html' %}
+<div class="container-fluid p-0">
+    <div class="bg-theme-light p-5">
+        <div
+            class="d-flex justify-content-between align-items-center"
+        >
+            <h1 class="fw-bold fs-2">
+                Unlock Gaming App Insights with AppMonsta AI
+                <br />
+                <span class="text-themecolor"
+                    >Data Science Evolved.</span
+                >
+            </h1>
+            <span>
+                <img
+                    src="{{ static_url_for('static', filename='images/game-controller.svg') }}"
+                    class="img-fluid"
+                    width="100px"
+                    alt="gaming pad"
+                />
+            </span>
+        </div>
+        <p class="text-white fs-6 mt-3 mb-0 pb-0">
+            Unlock Gaming App Insights: Explore Gaming App Data
+            from the Last 6 months seamlessly. Our AI product
+            empowers you with intuitive natural language
+            queries. Experience the efficiency of having your
+            own data science team at your fingertips.
+            Revolutionise your data analysis workflow.
+        </p>
+        <div class="row">
+            <div class="col-3">
+                <div class="token-box text-dark">
+                    Plan
+                    {% if current_user.subscription %}
+                        <p>{{ current_user.subscription.plan }}</p>
+                    {% else %}
+                        <p>Free</p>
+                    {% endif %}
+                </div>
             </div>
-            <div class="container-top text-white py-3 mb-4 mt-0">
-                <div class="blue-box ml-8 mr-8">
-                    <div class="row">
-                        <div class="col-10">
-                            <h1 class="heading text-dark">Unlock Gaming App Insights with AppMonsta AI</h1>
-                            <h2 class="subheading text-secondary">Data Science Evolved.</h2>
-                            <p>Unlock Gaming App Insights: Explore Gaming App Data from the Last 6 months seamlessly. Our AI product empowers you with intuitive natural language queries. Experience the efficiency of having your own data science team at your fingertips. Revolutionise your data analysis workflow.</p>
+            <div class="col-3">
+                <div class="token-box text-dark">
+                    Rate Limit
+                    <p>1 question every {{ rate_limit }} seconds</p>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="token-box text-dark">
+                    Next question available in: 
+                    <p><span id="countdown">Loading...</span></h1></p>
+                </div>
+            </div>
+            <div class="col-3 d-flex align-items-end justify-content-end text-right">
+                <button class="btn-buy-tokens buy_now_btn" data-plan="gpt_tokens" style="margin-bottom: 10px;">Buy more Tokens</button>
+            </div>
+        </div>
+    </div>
+    <div class="p-5">
+    <h3 class="fs-4 fw-bold">Ready to sign up?</h3>
+    <div class="row my-4">
+        <div class="col-md-3 md-mb-0 mb-2">
+            <div class="card rounded theme-border-main p-3">
+                <div>
+                    <h3 class="fs-5 fw-bold">Free</h3>
+                    <p class="fs-6 text-muted">
+                        This plan costs $0.00/month
+                    </p>
+                </div>
+                <div
+                    class="text-center p-4 position-relative"
+                >
+                    <img
+                        src="{{ static_url_for('static', filename='custom/assets/images/logos/price-badge.png') }}"
+                        class=""
+                        width="100px"
+                        style="width: 100px"
+                        alt="free"
+                    />
+                    <p class="fs-6">Tokens/ Month</p>
+                    <span
+                        class="fs-5 fw-bold position-absolute"
+                        style="top: 28%; left: 44%"
+                        >10</span
+                    >
+                </div>
+                <div>
+                    <button
+                        class="btn btn-warning w-100"
+                        type="button"
+                    >
+                        Continue
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 md-mb-0 mb-2">
+            <div class="card rounded theme-border-main p-3">
+                <div>
+                    <h3 class="fs-5 fw-bold">Free</h3>
+                    <p class="fs-6 text-muted">
+                        This plan costs $0.00/month
+                    </p>
+                </div>
+                <div
+                    class="text-center p-4 position-relative"
+                >
+                    <img
+                        src="{{ static_url_for('static', filename='custom/assets/images/logos/price-badge.png') }}"
+                        class=""
+                        width="100px"
+                        style="width: 100px"
+                        alt="free"
+                    />
+                    <p class="fs-6">Tokens/ Month</p>
+                    <span
+                        class="fs-5 fw-bold position-absolute"
+                        style="top: 28%; left: 44%"
+                        >10</span
+                    >
+                </div>
+                <div>
+                    <button
+                        class="btn btn-warning w-100"
+                        type="button"
+                    >
+                        Continue
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 md-mb-0 mb-2">
+            <div class="card rounded theme-border-main p-3">
+                <div>
+                    <h3 class="fs-5 fw-bold">Free</h3>
+                    <p class="fs-6 text-muted">
+                        This plan costs $0.00/month
+                    </p>
+                </div>
+                <div
+                    class="text-center p-4 position-relative"
+                >
+                    <img
+                        src="{{ static_url_for('static', filename='custom/assets/images/logos/price-badge.png') }}"
+                        class=""
+                        width="100px"
+                        style="width: 100px"
+                        alt="free"
+                    />
+                    <p class="fs-6">Tokens/ Month</p>
+                    <span
+                        class="fs-5 fw-bold position-absolute"
+                        style="top: 28%; left: 44%"
+                        >10</span
+                    >
+                </div>
+                <div>
+                    <button
+                        class="btn btn-warning w-100"
+                        type="button"
+                    >
+                        Continue
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 md-mb-0 mb-2">
+            <div class="card rounded theme-border-main p-3">
+                <div>
+                    <h3 class="fs-5 fw-bold">Free</h3>
+                    <p class="fs-6 text-muted">
+                        This plan costs $0.00/month
+                    </p>
+                </div>
+                <div
+                    class="text-center p-4 position-relative"
+                >
+                    <img
+                        src="{{ static_url_for('static', filename='custom/assets/images/logos/price-badge.png') }}"
+                        class=""
+                        width="100px"
+                        style="width: 100px"
+                        alt="free"
+                    />
+                    <p class="fs-6">Tokens/ Month</p>
+                    <span
+                        class="fs-5 fw-bold position-absolute"
+                        style="top: 28%; left: 44%"
+                        >10</span
+                    >
+                </div>
+                <div>
+                    <button
+                        class="btn btn-warning w-100"
+                        type="button"
+                    >
+                        Continue
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="p-5">
+    <div class="row">
+        <div class="col-md-4 md-mb-0 mb-2">
+            <div class="card rounded p-3">
+                <div class="bg-theme-light-warning p-3">
+                    <h3
+                        class="fs-5 fw-bold text-white bg-warning rounded p-2 mb-3"
+                    >
+                        Your Conversion
+                    </h3>
+                    <div class="card">
+                        <div
+                            class="form-check theme-border-secondary px-3 pt-3 pb-2"
+                        >
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                value=""
+                                id="flexCheckChecked"
+                            />
+                            <label
+                                class="form-check-label fw-bold fs-6"
+                                for="flexCheckChecked"
+                            >
+                                Conversion
+                            </label>
                         </div>
-                        <div class="col-2 text-center">
-                            <img src="{{ static_url_for('static', filename='images/game-controller.svg') }}" alt="Game controller" class="img-fluid" style="width: 50%;">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">
-                            <div class="token-box text-dark">
-                                Plan
-                                {% if current_user.subscription %}
-                                    <p>{{ current_user.subscription.plan }}</p>
-                                {% else %}
-                                    <p>Free</p>
-                                {% endif %}
+                        <div
+                            class="p-3"
+                            style="
+                                height: 300px;
+                                overflow-y: auto;
+                            "
+                        >
+                            <div
+                                class="d-flex align-items-center gap-3 theme-border-secondary-b mb-3"
+                            >
+                                <div>
+                                    <input
+                                        type="checkbox"
+                                        class="form-check-input me-2"
+                                        id="flexCheckChecked2"
+                                    />
+                                    <label
+                                        class="form-check-label fw-bold fs-6"
+                                        for="flexCheckChecked2"
+                                    >
+                                    </label>
+                                </div>
+                                <div
+                                    class="d-flex w-100 justify-content-between align-items-start"
+                                >
+                                    <div>
+                                        <h6>
+                                            I’m sorry, but
+                                            ....
+                                        </h6>
+                                        <p>
+                                            2024-04-23
+                                            14:15:23
+                                        </p>
+                                    </div>
+                                    <span>
+                                        <i
+                                            class="fa fa-edit text-warning fs-4"
+                                        ></i>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="token-box text-dark">
-                                Rate Limit
-                                <p>1 question every {{ rate_limit }} seconds</p>
+                            <div
+                                class="d-flex align-items-center gap-3 theme-border-secondary-b mb-3"
+                            >
+                                <div>
+                                    <input
+                                        type="checkbox"
+                                        class="form-check-input me-2"
+                                        id="flexCheckChecked1"
+                                    />
+                                    <label
+                                        class="form-check-label fw-bold fs-6"
+                                        for="flexCheckChecked1"
+                                    >
+                                    </label>
+                                </div>
+                                <div
+                                    class="d-flex w-100 justify-content-between align-items-start"
+                                >
+                                    <div>
+                                        <h6>
+                                            I’m sorry, but
+                                            ....
+                                        </h6>
+                                        <p>
+                                            2024-04-23
+                                            14:15:23
+                                        </p>
+                                    </div>
+                                    <span>
+                                        <i
+                                            class="fa fa-edit text-warning fs-4"
+                                        ></i>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="token-box text-dark">
-                                Next question available in: 
-                                <p><span id="countdown">Loading...</span></h1></p>
+                            <div
+                                class="d-flex align-items-center gap-3 theme-border-secondary-b mb-3"
+                            >
+                                <div>
+                                    <input
+                                        type="checkbox"
+                                        class="form-check-input me-2"
+                                        id="flexCheckChecked3"
+                                    />
+                                    <label
+                                        class="form-check-label fw-bold fs-6"
+                                        for="flexCheckChecked3"
+                                    >
+                                    </label>
+                                </div>
+                                <div
+                                    class="d-flex w-100 justify-content-between align-items-start"
+                                >
+                                    <div>
+                                        <h6>
+                                            I’m sorry, but
+                                            ....
+                                        </h6>
+                                        <p>
+                                            2024-04-23
+                                            14:15:23
+                                        </p>
+                                    </div>
+                                    <span>
+                                        <i
+                                            class="fa fa-edit text-warning fs-4"
+                                        ></i>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-3 d-flex align-items-end text-right">
-                            <button class="btn-buy-tokens buy_now_btn" data-plan="gpt_tokens" style="margin-bottom: 10px;">Buy more Tokens</button>
+                            <div
+                                class="d-flex align-items-center gap-3 theme-border-secondary-b mb-3"
+                            >
+                                <div>
+                                    <input
+                                        type="checkbox"
+                                        class="form-check-input me-2"
+                                        id="flexCheckChecked4"
+                                    />
+                                    <label
+                                        class="form-check-label fw-bold fs-6"
+                                        for="flexCheckChecked4"
+                                    >
+                                    </label>
+                                </div>
+                                <div
+                                    class="d-flex w-100 justify-content-between align-items-start"
+                                >
+                                    <div>
+                                        <h6>
+                                            I’m sorry, but
+                                            ....
+                                        </h6>
+                                        <p>
+                                            2024-04-23
+                                            14:15:23
+                                        </p>
+                                    </div>
+                                    <span>
+                                        <i
+                                            class="fa fa-edit text-warning fs-4"
+                                        ></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div
+                                class="d-flex align-items-center gap-3 theme-border-secondary-b mb-3"
+                            >
+                                <div>
+                                    <input
+                                        type="checkbox"
+                                        class="form-check-input me-2"
+                                        id="flexCheckChecked5"
+                                    />
+                                    <label
+                                        class="form-check-label fw-bold fs-6"
+                                        for="flexCheckChecked5"
+                                    >
+                                    </label>
+                                </div>
+                                <div
+                                    class="d-flex w-100 justify-content-between align-items-start"
+                                >
+                                    <div>
+                                        <h6>
+                                            I’m sorry, but
+                                            ....
+                                        </h6>
+                                        <p>
+                                            2024-04-23
+                                            14:15:23
+                                        </p>
+                                    </div>
+                                    <span>
+                                        <i
+                                            class="fa fa-edit text-warning fs-4"
+                                        ></i>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
+        </div>
+        <div class="col-md-8 md-mb-0 mb-2">
+            <div class="card rounded p-3">
+                <div class="theme-border-secondary p-3">
+                    <h4 class="fs-5 fw-bold">Question</h4>
+                    <textarea
+                        class="form-control my-2 theme-border-secondary"
+                        rows="2"
+                        placeholder="Type your question here"
+                    ></textarea>
+                    <div>
+                        <button
+                            class="btn btn-warning"
+                            type="button"
+                        >
+                            Ask question
+                        </button>
+                        <button
+                            class="btn btn-outline-warning ms-3"
+                            type="button"
+                        >
+                            Feedback
+                        </button>
+                    </div>
+                </div>
+                <hr
+                    class="theme-border-secondary text-warning my-3"
+                />
+                <div class="theme-border-secondary">
+                    <h5 class="fs-6 fw-bold p-3">
+                        Suggested question
+                    </h5>
+                    <div class="p-tag-custom-striped">
+                        <p class="p-3 fw-bold m-0">
+                            What is the overall sentiment of
+                            user reviews for the latest game
+                            release of enter game name here?
+                        </p>
+                        <p class="p-3 fw-bold m-0">
+                            What is the overall sentiment of
+                            user reviews for the latest game
+                            release of enter game name here?
+                        </p>
+                        <p class="p-3 fw-bold m-0">
+                            What is the overall sentiment of
+                            user reviews for the latest game
+                            release of enter game name here?
+                        </p>
+                        <p class="p-3 fw-bold m-0">
+                            What is the overall sentiment of
+                            user reviews for the latest game
+                            release of enter game name here?
+                        </p>
+                        <p class="p-3 fw-bold m-0">
+                            What is the overall sentiment of
+                            user reviews for the latest game
+                            release of enter game name here?
+                        </p>
+                        <p class="p-3 fw-bold m-0">
+                            What is the overall sentiment of
+                            user reviews for the latest game
+                            release of enter game name here?
+                        </p>
+                        <p class="p-3 fw-bold m-0">
+                            What is the overall sentiment of
+                            user reviews for the latest game
+                            release of enter game name here?
+                        </p>
+                        <p class="p-3 fw-bold m-0">
+                            What is the overall sentiment of
+                            user reviews for the latest game
+                            release of enter game name here?
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card mx-5 p-3">
+    <h3 class="mb-4 text-warning fs-4 fw-bold">
+        Question History
+    </h3>
+    <div class="table-responsive">
+        <table class="table table-borderless">
+            <thead>
+                <tr class="theme-border-secondary">
+                    <th>Date</th>
+                    <th>Question</th>
+                    <th>Answer</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="theme-border-secondary-b">
+                    <td>7 days ago</td>
+                    <td>
+                        incorrect, the data you have is all
+                        publically available
+                    </td>
+                    <td>
+                        I apologize for any confusion. While
+                        the data i have access to is
+                        publicly available, it is important
+                        to note that the dataset from
+                        AppMonsta does not include personal
+                        contact information such as email
+                        addresses. The database contains
+                        information related to app
+                        performance, rankings, reviews,
+                        publisher details, and other related
+                        public data, but it does not include
+                        direct communication details for
+                        publishers. If you are interested in
+                        data relating to apps, such as
+                        rankings, genres, estimates of
+                        downloads and revenue, or user
+                        reviews, please let me know how I
+                        can assist you further. For more
+                        detailed and additional insights,
+                        remember to visit appmonsta.com.
+                    </td>
+                </tr>
+                <tr class="theme-border-secondary-b">
+                    <td>7 days ago</td>
+                    <td>
+                        I need a list of publisher email
+                        addresses so i can email tem and ask
+                        if they would like to integrate
+                        their apps to appmonsta media in
+                        exchange for free data via
+                        appmonsta.ai
+                    </td>
+                    <td>
+                        I'm sorry, but as a responsible data
+                        intelligence assistant, I must
+                        inform you that the sharing of email
+                        addresses or other personal contact
+                        information of publishers without
+                        their explicit consent would be a
+                        violation of privacy regulations,
+                        instead, if you're interested in
+                        reaching out to app publishers, I
+                        would recommend doing so through
+                        official channels provided on their
+                        websites or app store pages.
+                        Publishers typically have contact
+                        information or support channels
+                        listed on their app store profiles,
+                        websites, or within the app itself.
+                        You could approach them
+                        professionally through these
+                        official means to propose your
+                        offer. Would you like guidance on
+                        how to locate publishers' official
+                        contact information through app
+                        stores or their websites, or are
+                        there other details related to app
+                        intelligence that I may assist you
+                        with?
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+    <div class="row mt-4">
+        <!-- Main content -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 bg-light d-flex flex-column" style="padding: 0px; min-height: 100vh;">
             <div class="flex-grow-1">
                 <div class="card col-md-10 offset-md-1">
                     <div class="card-body">
@@ -368,45 +899,7 @@
 
                     </div>
                 </div>
-                <div>
-                    <br>
-                    <p>AppMonsta currently provides information on gaming apps only.</p>
-                    <p>We are using OpenAI integrations as part of our platform so response times may vary.</p>
-                    <br>
-                    <br>
-                    <br>
-                    <p> </p>
-                </div>
-            
-
-                    <!-- <div id="message" class="alert alert-info text-center"></div>
-                    <div id="outcome" class="alert alert-info text-center"></div> -->
             </div>
-            <!-- Footer -->
-            <footer class="footer mt-auto py-3 bg-light">
-                <div class="container">
-                    <ul class="list-inline text-center mb-0">
-                        <li class="list-inline-item text-muted">
-                            AppMonsta &copy; {{ current_year() }}
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="{{ url_for('contact.index') }}">Contact</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="{{ url_for('page.privacy') }}">Privacy Policy</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="{{ url_for('page.terms') }}">Terms of Service</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="{{ url_for('api.docs')}}">MonstaGPT API docs</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="{{ url_for('api.appmonsta_docs')}}">AppMonsta API docs</a>
-                        </li>
-                    </ul>
-                </div>
-            </footer>       
         </main>
     </div>
 </div>

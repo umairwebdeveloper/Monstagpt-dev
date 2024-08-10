@@ -1,0 +1,324 @@
+{% extends 'layouts/app.html' %}
+{% block title %}Admin - Dashboard{% endblock %}
+{% import 'macros/form.html' as f with context %}
+{% block body %}
+
+<style>
+
+/* Existing styles */
+.container-top {
+      background-color: #AECDE2;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding-left: 8.3%;
+      padding-right: 5%;
+      margin-top: 0;
+  }
+
+  body, html {
+      height: 100%;
+  }
+
+  .container-fluid {
+      min-height: 100%;
+  }
+
+  main {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+  }
+
+  .flex-grow-1 {
+      flex-grow: 1;
+  }
+
+  .footer {
+      background-color: #f8f9fa;
+      border-top: 1px solid #dee2e6;
+  }
+
+  .footer ul {
+      margin-bottom: 0;
+  }
+
+  .footer a {
+      color: #6c757d;
+  }
+
+  .footer a:hover {
+      color: #343a40;
+      text-decoration: none;
+  }
+
+  /* Page specific styles */
+  #item-list {
+      list-style-type: none;
+      padding-left: 0;  
+  }
+
+  input[name="name"] {
+        width: 400px; 
+    }
+
+  #item-list input[type="text"] {
+      width: 400px;  
+  }
+</style>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+     
+    <!-- Main content -->
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 bg-light d-flex flex-column" style="padding: 0px; min-height: 100vh;">
+      <div class="text-white mt-0">
+          
+      </div>
+      <div class="flex-grow-1">
+        <div class="card col-md-10 offset-md-1">
+            <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <a href="{{ url_for('admin.coupons') }}">Billing</a>
+                <span class="float-right text-muted">
+                  {{ group_and_count_plans.total }}
+                </span>
+              </div>
+              <div class="card-body">
+                <h5 class="mt-2">Subscriptions</h5>
+                {% for item in group_and_count_plans.query %}
+                  {% set percent = ((item[0] / group_and_count_plans.total) * 100) | round %}
+                  <p class="mt-2 mb-2">
+                    {{ item[1] | title }}
+                    <span class="text-muted">({{ item[0] }})</span>
+                  </p>
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar"
+                          aria-valuenow="{{ percent }}" aria-valuemin="0"
+                          aria-valuemax="100" style="width: {{ percent }}%;">
+                      {{ percent }}%
+                    </div>
+                  </div>
+                {% endfor %}
+                <h5 class="mt-5">
+                  Coupons
+                  <a href="{{ url_for('admin.coupons_new') }}"
+                      class="btn btn-outline-secondary btn-sm float-right">Add</a>
+                </h5>
+                <p class="mt-2 mb-2">
+                  Subscribers are using
+                  {{ group_and_count_coupons[0] }} coupon(s)
+                </p>
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar"
+                        aria-valuenow="{{ group_and_count_coupons[2] }}"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        style="width: {{ group_and_count_coupons[2] }}%;">
+                    {{ group_and_count_coupons[2] }}%
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <a href="{{ url_for('admin.users') }}">Users</a>
+                <span class="float-right text-muted">
+                  {{ group_and_count_users.total }}
+                </span>
+              </div>
+              <div class="card-body">
+                {% for item in group_and_count_users.query %}
+                  {% set percent = ((item[0] / group_and_count_users.total) * 100) | round %}
+                  <p class="mt-2 mb-2">
+                    {{ item[1] | title }}
+                    <span class="text-muted">({{ item[0] }})</span>
+                  </p>
+                  <div class="progress mb-4">
+                    <div class="progress-bar" role="progressbar"
+                          aria-valuenow="{{ percent }}" aria-valuemin="0"
+                          aria-valuemax="100" style="width: {{ percent }}%;">
+                      {{ percent }}%
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <a href="{{ url_for('admin.users') }}">gpt</a>
+                <span class="float-right text-muted">
+                  
+                </span>
+              </div>
+              <div class="card-body">
+                <h5 class="mt-2">Costs</h5>
+                
+                {% set current_month_key = (current_year_value|string) ~ '-' ~ ('0' + (current_month|string))[-2:] %}
+                {% set last_month_key = (last_year|string) ~ '-' ~ ('0' + (last_month|string))[-2:] %}
+                
+                <p>Current Month to Date ({{ current_month_key }}): ${{ costs.get(current_month_key, '0.00') }}</p>
+                <p>Last Month ({{ last_month_key }}): ${{ costs.get(last_month_key, '0.00') }}</p>
+
+                <h5>User Costs for Current Month</h5>
+                  <ul>
+                  {% for user_cost in user_costs %}
+                      <li>{{ user_cost.user }}: ${{ user_cost.total_cost }}</li>
+                  {% endfor %}
+                  </ul>
+                <a href="{{ url_for('admin.gpt_history') }}"
+                    class="btn btn-outline-secondary btn-sm">All gpt questions</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <p>Open/Close signups</p>
+              </div>
+              <div class="card-body">
+                {% call f.form_tag('admin.dashboard') %}
+                <p>{% call f.form_group(allow_signups_form.allow_signup ) %}{% endcall %}</p>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <button type="submit" class="btn btn-primary btn-block">
+                      update
+                    </button>
+                  </div>
+                  </div>
+                  {% endcall %}
+              </div>
+            </div>
+          </div>
+    
+        <div class="row" style="margin-left: 0px;">
+          <p>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseSuggested" aria-expanded="false" aria-controls="collapseSuggested">
+              Suggested questions
+            </button>
+          </p>
+          <p>
+            <a href="{{ url_for('admin.instructions_update') }}"
+                        class="btn btn-outline-secondary btn-sm">GPT Instructions</a>
+          </p>
+          <p>
+            <a href="{{ url_for('admin.manage_tiers') }}"
+                        class="btn btn-outline-secondary btn-sm">Manage Tiers</a>
+          </p>
+          <div class="collapse" id="collapseSuggested">
+            <div class="card card-body">
+              
+                <meta name="csrf-token" content="{{ form.csrf_token._value() }}">   
+                <h5>Suggested Questions</h5>
+                
+                <!-- Form to add a new item -->
+                <form method="POST" action="/admin/suggested/add">
+                    {{ form.csrf_token }}
+                    <input type="text" name="name" placeholder="Enter new question here">
+                    <button type="submit">Add</button>
+                </form>
+                <br>
+                <br>
+                <!-- List of items -->
+                <ul id="item-list">
+                  {% for item in item_list %}
+                      <li id="item-{{ item.id }}">
+                          <form method="POST" action="/admin/suggested/update/{{ item.id }}">
+                              {{ form.csrf_token }}  <!-- Include CSRF token here -->
+                              <input type="text" name="new_name" value="{{ item.question }}">
+                              <button type="submit">Update</button>
+                          </form>
+                          <form method="POST" action="/admin/suggested/delete/{{ item.id }}">
+                              {{ form.csrf_token }}  <!-- Include CSRF token here as well -->
+                              <button type="submit">Delete</button>
+                          </form>
+                      </li>
+                      <br>
+                  {% endfor %}
+                </ul>
+            
+                
+
+            </div>
+
+          </div>
+        </div>
+    </main>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+
+    $(function() {
+        $("#item-list").sortable({
+            update: function(event, ui) {
+                var itemOrder = $(this).sortable("toArray");
+                var csrf_token = $("#csrf_token").val();
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/suggested/reorder",
+                    data: { order: itemOrder },
+                    beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            },
+                    success: function(response) {
+                        // Handle success if needed
+                    },
+                    error: function(error) {
+                        // Handle error if needed
+                        console.log(error);
+                    }
+                });
+            }
+        });
+        $("#item-list").disableSelection();
+    });
+
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const itemSortable = document.querySelector("#item-list");
+        itemSortable.addEventListener("sortupdate", handleSortUpdate);
+
+        function handleSortUpdate(event) {
+            const itemOrder = Array.from(itemSortable.children).map(item => item.id);
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+            
+            fetch("/admin/suggested/reorder", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken
+                },
+                body: JSON.stringify({ order: itemOrder })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle success if needed
+                console.log("Success");
+            })
+            .catch(error => {
+                // Handle error if needed
+                console.error(error);
+            });
+        }
+    });
+</script>
+
+
+{% endblock %}

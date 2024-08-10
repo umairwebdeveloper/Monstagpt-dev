@@ -1,26 +1,22 @@
-{% extends 'layouts/app.html' %}
-{% import 'macros/items.html' as items %}
-{% import 'macros/form.html' as f with context %}
-{% import 'macros/user.html' as account %}
-{% block title %}Appmonsta insights API{% endblock %}
-{% block meta_description %}Unlock App store intelligence with Appmonsta APIs{% endblock %}
-
-{%block head_extra %}
+{% extends 'layouts/app.html' %} {% import 'macros/items.html' as items %} {%
+import 'macros/form.html' as f with context %} {% import 'macros/user.html' as
+account %} {% block title %}Appmonsta insights API{% endblock %} {% block
+meta_description %}Unlock App store intelligence with Appmonsta APIs{% endblock
+%} {%block head_extra %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-{% endblock %}
-
-{% block body %}
+{% endblock %} {% block body %}
 <style>
-     /* Existing styles */
-     .container-top {
-        background-color: #AECDE2;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    /* Existing styles */
+    .container-top {
+        background-color: #aecde2;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         padding-left: 8.3%;
         padding-right: 5%;
         margin-top: 0;
     }
 
-    body, html {
+    body,
+    html {
         height: 100%;
     }
 
@@ -58,11 +54,12 @@
 
     /* page specific styles */
     .plan-card {
-        border-color: #007BFF;
+        border-color: #007bff;
     }
 
-    .token-count{
-        background: url("{{ url_for('static', filename='images/ticket_stubs.jpg') }}") no-repeat center;
+    .token-count {
+        background: url("{{ url_for('static', filename='images/ticket_stubs.jpg') }}")
+            no-repeat center;
         background-size: 100%;
         height: 100px; /* Height of the token area */
         display: flex;
@@ -104,8 +101,8 @@
         margin: 5px;
         font-family: monospace;
     }
-    
-.chart-container {
+
+    .chart-container {
         position: relative;
         height: 400px;
         width: 100%;
@@ -120,32 +117,56 @@
         margin-bottom: 20px;
     }
 
-    #chartContainer { width: 80%; margin: 20px auto; }
-    #totalHits { font-size: 18px; margin-bottom: 10px; text-align: center; }
-
+    #chartContainer {
+        width: 80%;
+        margin: 20px auto;
+    }
+    #totalHits {
+        font-size: 18px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
 </style>
-
 
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
-        {% include 'layouts/_sidebar.html' %}
 
         <!-- Main content -->
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 bg-light d-flex flex-column" style="padding: 0px; min-height: 100vh;">
-            <div class="text-white mt-0">
-                {% include 'layouts/_topnav.html' %}
-            </div>
+        <main
+            role="main"
+            class="col-md-9 ml-sm-auto col-lg-10 bg-light d-flex flex-column"
+            style="padding: 0px; min-height: 100vh"
+        >
+            <div class="text-white mt-0"></div>
             <div class="container-top text-white py-3 mb-4 mt-0">
                 <div class="blue-box ml-8 mr-8">
                     <div class="row">
                         <div class="col-10">
-                            <h1 class="heading text-dark">Unlock App Store Intelligence With AppMonstas APIs</h1>
-                            <h2 class="subheading text-secondary">Boost Your Growth</h2>
-                            <p>Experience the ultimate API solution for accessing global app store intelligence data effortlessly. Dive into a wealth of app insights spanning Google Play and iOS App Store apps across 155 countries. Harness this comprehensive dataset to develop innovative services atop the app store ecosystem</p>
+                            <h1 class="heading text-dark">
+                                Unlock App Store Intelligence With AppMonstas
+                                APIs
+                            </h1>
+                            <h2 class="subheading text-secondary">
+                                Boost Your Growth
+                            </h2>
+                            <p>
+                                Experience the ultimate API solution for
+                                accessing global app store intelligence data
+                                effortlessly. Dive into a wealth of app insights
+                                spanning Google Play and iOS App Store apps
+                                across 155 countries. Harness this comprehensive
+                                dataset to develop innovative services atop the
+                                app store ecosystem
+                            </p>
                         </div>
                         <div class="col-2 text-center">
-                            <img src="{{ static_url_for('static', filename='images/terminal.svg') }}" alt="Terminal interface" class="img-fluid" style="width: 50%;">
+                            <img
+                                src="{{ static_url_for('static', filename='images/terminal.svg') }}"
+                                alt="Terminal interface"
+                                class="img-fluid"
+                                style="width: 50%"
+                            />
                         </div>
                     </div>
                 </div>
@@ -154,26 +175,35 @@
                 <div class="card col-md-10 offset-md-1">
                     <div class="card-body">
                         <div class="row">
-                                    
                             <div class="col-md-10">
                                 <div class="mt-1">
-                                    {% if current_user.subscription.status == 'expired' %}
-                                        <p>Your subscription has expired. To access your API keys, please renew your subscription.</p>
+                                    {% if current_user.subscription.status ==
+                                    'expired' %}
+                                    <p>
+                                        Your subscription has expired. To access
+                                        your API keys, please renew your
+                                        subscription.
+                                    </p>
+                                    {% else %} {% if current_user.insights_keys
+                                    %}
+                                    <p>Here are your keys:</p>
+                                    <ul class="key-list">
+                                        {% for key in
+                                        current_user.insights_keys.split('\n')
+                                        %}
+                                        <li class="key-item">{{ key }}</li>
+                                        {% endfor %}
+                                    </ul>
                                     {% else %}
-                                        {% if current_user.insights_keys %}
-                                            <p>Here are your keys:</p>
-                                            <ul class="key-list">
-                                            {% for key in current_user.insights_keys.split('\n') %}
-                                                <li class="key-item">{{ key }}</li>
-                                            {% endfor %}
-                                            </ul>
-                                        {% else %}
-                                            <p>Thank you for your subscription. Your keys will be available within 24 hours. Please check back later.</p>
-                                        {% endif %}
-                                    {% endif %}
+                                    <p>
+                                        Thank you for your subscription. Your
+                                        keys will be available within 24 hours.
+                                        Please check back later.
+                                    </p>
+                                    {% endif %} {% endif %}
                                 </div>
                             </div>
-                        </div>  
+                        </div>
                     </div>
                 </div>
 
@@ -181,14 +211,19 @@
                     <div class="card-body">
                         <div class="row">
                             <div>
-                                <label for="apiKeySelect">Select API Key:</label>
+                                <label for="apiKeySelect"
+                                    >Select API Key:</label
+                                >
                                 <select id="apiKeySelect">
-                                    {% if api_data.keys() %}
-                                        {% for api_key in api_data.keys() %}
-                                            <option value="{{ api_key }}">{{ api_key }}</option>
-                                        {% endfor %}
-                                    {% else %}
-                                        <option value="" disabled>No API keys available</option>
+                                    {% if api_data.keys() %} {% for api_key in
+                                    api_data.keys() %}
+                                    <option value="{{ api_key }}">
+                                        {{ api_key }}
+                                    </option>
+                                    {% endfor %} {% else %}
+                                    <option value="" disabled>
+                                        No API keys available
+                                    </option>
                                     {% endif %}
                                 </select>
                             </div>
@@ -203,8 +238,18 @@
                 <div class="card col-md-10 offset-md-1 mt-3">
                     <div class="card-body">
                         <div class="row">
-                            <div id="statusChartContainer" style="position: relative; width: 100%; height: 400px;">
-                                <select id="statusCodeSelect" class="status-dropdown">
+                            <div
+                                id="statusChartContainer"
+                                style="
+                                    position: relative;
+                                    width: 100%;
+                                    height: 400px;
+                                "
+                            >
+                                <select
+                                    id="statusCodeSelect"
+                                    class="status-dropdown"
+                                >
                                     <option value="SUCCESS">Success</option>
                                     <option value="ERROR">Error</option>
                                     <option value="ABORTED">Aborted</option>
@@ -214,108 +259,248 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="card col-md-10 offset-md-1 mt-3">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="faq-section">
                                     <div class="faq-item">
-                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq1" aria-expanded="false" aria-controls="faq1">
+                                        <div
+                                            class="faq-title faq-question"
+                                            data-toggle="collapse"
+                                            data-target="#faq1"
+                                            aria-expanded="false"
+                                            aria-controls="faq1"
+                                        >
                                             What is an API?
-                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                            <i
+                                                class="faq-icon fas fa-plus-circle"
+                                            ></i>
                                         </div>
                                         <div id="faq1" class="collapse">
                                             <div class="faq-answer">
-                                                An API is a set of rules, protocols, and tools for building software applications. With the AppMonsta API’s  you can build our product right into your own platforms. Many of our clients already do this.                               
+                                                An API is a set of rules,
+                                                protocols, and tools for
+                                                building software applications.
+                                                With the AppMonsta API’s you can
+                                                build our product right into
+                                                your own platforms. Many of our
+                                                clients already do this.
                                             </div>
                                         </div>
                                     </div>
-                                    <hr>
+                                    <hr />
                                     <div class="faq-item">
-                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq2" aria-expanded="false" aria-controls="faq2">
+                                        <div
+                                            class="faq-title faq-question"
+                                            data-toggle="collapse"
+                                            data-target="#faq2"
+                                            aria-expanded="false"
+                                            aria-controls="faq2"
+                                        >
                                             How does an API work?
-                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                            <i
+                                                class="faq-icon fas fa-plus-circle"
+                                            ></i>
                                         </div>
                                         <div id="faq2" class="collapse">
                                             <div class="faq-answer">
-                                                An API works as an intermediary layer between an application and a web server. The application sends a request to the API with specific parameters, the API translates that request into a format understood by the web server, sends the request to the server, then returns the server’s response back to the application.                  
+                                                An API works as an intermediary
+                                                layer between an application and
+                                                a web server. The application
+                                                sends a request to the API with
+                                                specific parameters, the API
+                                                translates that request into a
+                                                format understood by the web
+                                                server, sends the request to the
+                                                server, then returns the
+                                                server’s response back to the
+                                                application.
                                             </div>
                                         </div>
                                     </div>
-                                    <hr>
+                                    <hr />
                                     <div class="faq-item">
-                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq3" aria-expanded="false" aria-controls="faq3">
+                                        <div
+                                            class="faq-title faq-question"
+                                            data-toggle="collapse"
+                                            data-target="#faq3"
+                                            aria-expanded="false"
+                                            aria-controls="faq3"
+                                        >
                                             How can I access the AppMonsta API?
-                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                            <i
+                                                class="faq-icon fas fa-plus-circle"
+                                            ></i>
                                         </div>
                                         <div id="faq3" class="collapse">
                                             <div class="faq-answer">
-                                                To access an AppMonsta API, you typically need an API key or token, which we can provide to you to test the data. Please apply <a href="https://contact.appmonsta.ai/Contact-Us#api-pricing/&r_done=1">here</a> to get your trial API key and access the AppMonsta app store intelligence data.
+                                                To access an AppMonsta API, you
+                                                typically need an API key or
+                                                token, which we can provide to
+                                                you to test the data. Please
+                                                apply
+                                                <a
+                                                    href="https://contact.appmonsta.ai/Contact-Us#api-pricing/&r_done=1"
+                                                    >here</a
+                                                >
+                                                to get your trial API key and
+                                                access the AppMonsta app store
+                                                intelligence data.
                                             </div>
                                         </div>
                                     </div>
-                                    <hr>
+                                    <hr />
                                     <div class="faq-item">
-                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq4" aria-expanded="false" aria-controls="faq4">
-                                            How do I authenticate my requests to the API?
-                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                        <div
+                                            class="faq-title faq-question"
+                                            data-toggle="collapse"
+                                            data-target="#faq4"
+                                            aria-expanded="false"
+                                            aria-controls="faq4"
+                                        >
+                                            How do I authenticate my requests to
+                                            the API?
+                                            <i
+                                                class="faq-icon fas fa-plus-circle"
+                                            ></i>
                                         </div>
                                         <div id="faq4" class="collapse">
                                             <div class="faq-answer">
-                                                Requests to the API are protected with HTTP Basic authentication. You must include your API key in each request. All requests must use HTTPS, and HTTP requests will return a 400 error response. If you lose your API key, you can retrieve it from our email or contact us                              
+                                                Requests to the API are
+                                                protected with HTTP Basic
+                                                authentication. You must include
+                                                your API key in each request.
+                                                All requests must use HTTPS, and
+                                                HTTP requests will return a 400
+                                                error response. If you lose your
+                                                API key, you can retrieve it
+                                                from our email or contact us
                                             </div>
                                         </div>
                                     </div>
-                                    <hr>
+                                    <hr />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="faq-section">
                                     <div class="faq-item">
-                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq5" aria-expanded="false" aria-controls="faq5">
-                                            What are the rate limits for API usage?
-                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                        <div
+                                            class="faq-title faq-question"
+                                            data-toggle="collapse"
+                                            data-target="#faq5"
+                                            aria-expanded="false"
+                                            aria-controls="faq5"
+                                        >
+                                            What are the rate limits for API
+                                            usage?
+                                            <i
+                                                class="faq-icon fas fa-plus-circle"
+                                            ></i>
                                         </div>
                                         <div id="faq5" class="collapse">
                                             <div class="faq-answer">
-                                                The free API key provides limited access to app store intelligence: for single app record calls, the limit is 50 hits per day, and for bulk calls, you get the first 50 records per call. If you exceed these limits, you may receive a 429 error code. For extended access, consider subscribing to a plan.
+                                                The free API key provides
+                                                limited access to app store
+                                                intelligence: for single app
+                                                record calls, the limit is 50
+                                                hits per day, and for bulk
+                                                calls, you get the first 50
+                                                records per call. If you exceed
+                                                these limits, you may receive a
+                                                429 error code. For extended
+                                                access, consider subscribing to
+                                                a plan.
                                             </div>
                                         </div>
                                     </div>
-                                    <hr>
+                                    <hr />
                                     <div class="faq-item">
-                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq6" aria-expanded="false" aria-controls="faq6">
+                                        <div
+                                            class="faq-title faq-question"
+                                            data-toggle="collapse"
+                                            data-target="#faq6"
+                                            aria-expanded="false"
+                                            aria-controls="faq6"
+                                        >
                                             How do I handle errors in the API?
-                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                            <i
+                                                class="faq-icon fas fa-plus-circle"
+                                            ></i>
                                         </div>
                                         <div id="faq6" class="collapse">
                                             <div class="faq-answer">
-                                                The API uses standard HTTP error codes to indicate issues with requests. For example, a 400 error might indicate a bad input parameter, 401 for missing or bad API key, 403 for access beyond your subscription, 404 for unavailable data, 429 for rate limit exceedance, and 500 for server errors.
+                                                The API uses standard HTTP error
+                                                codes to indicate issues with
+                                                requests. For example, a 400
+                                                error might indicate a bad input
+                                                parameter, 401 for missing or
+                                                bad API key, 403 for access
+                                                beyond your subscription, 404
+                                                for unavailable data, 429 for
+                                                rate limit exceedance, and 500
+                                                for server errors.
                                             </div>
                                         </div>
                                     </div>
-                                    <hr>
+                                    <hr />
                                     <div class="faq-item">
-                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq7" aria-expanded="false" aria-controls="faq7">
-                                            Is there a way to track the status of bulk API requests?
-                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                        <div
+                                            class="faq-title faq-question"
+                                            data-toggle="collapse"
+                                            data-target="#faq7"
+                                            aria-expanded="false"
+                                            aria-controls="faq7"
+                                        >
+                                            Is there a way to track the status
+                                            of bulk API requests?
+                                            <i
+                                                class="faq-icon fas fa-plus-circle"
+                                            ></i>
                                         </div>
                                         <div id="faq7" class="collapse">
                                             <div class="faq-answer">
-                                                Yes, bulk API requests return a request ID that you can use to validate the request’s status through the Request Status API. This ID is sent via the X-Request-ID HTTP Header. The Request Status API will inform you whether your request succeeded, failed, or was aborted.
+                                                Yes, bulk API requests return a
+                                                request ID that you can use to
+                                                validate the request’s status
+                                                through the Request Status API.
+                                                This ID is sent via the
+                                                X-Request-ID HTTP Header. The
+                                                Request Status API will inform
+                                                you whether your request
+                                                succeeded, failed, or was
+                                                aborted.
                                             </div>
                                         </div>
                                     </div>
-                                    <hr>
+                                    <hr />
                                     <div class="faq-item">
-                                        <div class="faq-title faq-question" data-toggle="collapse" data-target="#faq8" aria-expanded="false" aria-controls="faq8">
-                                            What formats are supported for API responses?
-                                            <i class="faq-icon fas fa-plus-circle"></i>
+                                        <div
+                                            class="faq-title faq-question"
+                                            data-toggle="collapse"
+                                            data-target="#faq8"
+                                            aria-expanded="false"
+                                            aria-controls="faq8"
+                                        >
+                                            What formats are supported for API
+                                            responses?
+                                            <i
+                                                class="faq-icon fas fa-plus-circle"
+                                            ></i>
                                         </div>
                                         <div id="faq8" class="collapse">
                                             <div class="faq-answer">
-                                                API responses are returned in JSON format. For multi-record formats, the API uses JSON Lines (JSONL), which means JSON dictionaries are separated by newlines. This format is particularly useful for processing large app store intelligence datasets efficiently
+                                                API responses are returned in
+                                                JSON format. For multi-record
+                                                formats, the API uses JSON Lines
+                                                (JSONL), which means JSON
+                                                dictionaries are separated by
+                                                newlines. This format is
+                                                particularly useful for
+                                                processing large app store
+                                                intelligence datasets
+                                                efficiently
                                             </div>
                                         </div>
                                     </div>
@@ -323,12 +508,11 @@
                             </div>
                         </div>
                         <div class="row">
-                            <p> </p>
+                            <p></p>
                         </div>
                     </div>
                 </div>
             </div>
-
 
             <!-- Footer -->
             <footer class="footer mt-auto py-3 bg-light">
@@ -341,26 +525,31 @@
                             <a href="{{ url_for('contact.index') }}">Contact</a>
                         </li>
                         <li class="list-inline-item">
-                            <a href="{{ url_for('page.privacy') }}">Privacy Policy</a>
+                            <a href="{{ url_for('page.privacy') }}"
+                                >Privacy Policy</a
+                            >
                         </li>
                         <li class="list-inline-item">
-                            <a href="{{ url_for('page.terms') }}">Terms of Service</a>
+                            <a href="{{ url_for('page.terms') }}"
+                                >Terms of Service</a
+                            >
                         </li>
                         <li class="list-inline-item">
-                            <a href="{{ url_for('api.docs')}}">MonstaGPT API docs</a>
+                            <a href="{{ url_for('api.docs')}}"
+                                >MonstaGPT API docs</a
+                            >
                         </li>
                         <li class="list-inline-item">
-                            <a href="{{ url_for('api.appmonsta_docs')}}">AppMonsta API docs</a>
+                            <a href="{{ url_for('api.appmonsta_docs')}}"
+                                >AppMonsta API docs</a
+                            >
                         </li>
                     </ul>
                 </div>
             </footer>
-
         </main>
     </div>
 </div>
 
-<script>
-  
-</script>
+<script></script>
 {% endblock %}
