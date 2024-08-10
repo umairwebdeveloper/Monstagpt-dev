@@ -4,8 +4,6 @@
 ### App #######################################################################
 
 .webpack_cache/
-public/*
-!public/.keep
 
 .env*
 !.env.example
