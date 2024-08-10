@@ -183,6 +183,7 @@
                             <!-- ============================================================== -->
                             <!-- Profile -->
                             <!-- ============================================================== -->
+                            {% if current_user.is_authenticated %}
                             <li class="nav-item dropdown u-pro">
                                 <a
                                     class="nav-link dropdown-toggle waves-effect waves-dark profile-pic border-0 px-2 mx-0"
@@ -235,6 +236,20 @@
                                     </a>
                                 </div>
                             </li>
+                            {% else %}
+                            <li class="nav-item dropdown u-pro">
+                                <a
+                                    class="nav-link dropdown-toggle waves-effect waves-dark profile-pic border-0 px-2 mx-0"
+                                    href="{{ url_for('user.login') }}"
+                                    ><i
+                                        class="fa fa-user fs-6 text-warning"
+                                    ></i>
+                                    <span class="hidden-md-down"
+                                        >Log In &nbsp;</span
+                                    >
+                                </a>
+                            </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </nav>
@@ -307,7 +322,7 @@
                             <li>
                                 <a
                                     class="waves-effect waves-dark {{ 'active' if request.path == '/support' else '' }}"
-                                    href="#"
+                                    href="https://contact.appmonsta.ai/Support"
                                     aria-expanded="false"
                                     ><i class="fa fa-plane"></i
                                     ><span class="hide-menu">Support</span></a

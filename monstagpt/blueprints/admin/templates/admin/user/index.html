@@ -8,10 +8,9 @@ account %} {% block title %}Admin - Users / List{% endblock %} {% block body %}
         <!-- Main content -->
         <main
             role="main"
-            class="col-md-9 ml-sm-auto col-lg-10 bg-light"
+            class="col-md-12 ml-sm-auto col-lg-12 bg-light"
             style="padding: 0px"
         >
-            <div class="text-white mt-0"></div>
             <div class="col-md-12">
                 {{ f.search('admin.users') }} {% if users.total == 0 %}
                 <h3>No results found</h3>

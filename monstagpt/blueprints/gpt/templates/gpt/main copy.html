@@ -220,10 +220,8 @@
                 </div>
                 <div>
                     <button
-                        class="btn btn-warning w-100 disabled"
-                        disabled
+                        class="btn btn-warning w-100"
                         type="button"
-                        data-bs-toggle="modal" data-bs-target="#connectModal"
                     >
                         Continue
                     </button>
@@ -233,9 +231,9 @@
         <div class="col-md-3 md-mb-0 mb-2">
             <div class="card rounded theme-border-main p-3">
                 <div>
-                    <h3 class="fs-5 fw-bold">Bronze</h3>
+                    <h3 class="fs-5 fw-bold">Free</h3>
                     <p class="fs-6 text-muted">
-T                       his plan costs $99.00/month                    
+                        This plan costs $0.00/month
                     </p>
                 </div>
                 <div
@@ -252,14 +250,13 @@ T                       his plan costs $99.00/month
                     <span
                         class="fs-5 fw-bold position-absolute"
                         style="top: 28%; left: 44%"
-                        >100</span
+                        >10</span
                     >
                 </div>
                 <div>
                     <button
                         class="btn btn-warning w-100"
                         type="button"
-                        data-bs-toggle="modal" data-bs-target="#connectModal"
                     >
                         Continue
                     </button>
@@ -269,9 +266,9 @@ T                       his plan costs $99.00/month
         <div class="col-md-3 md-mb-0 mb-2">
             <div class="card rounded theme-border-main p-3">
                 <div>
-                    <h3 class="fs-5 fw-bold">Gold</h3>
+                    <h3 class="fs-5 fw-bold">Free</h3>
                     <p class="fs-6 text-muted">
-T                           his plan costs $249.00/month                    
+                        This plan costs $0.00/month
                     </p>
                 </div>
                 <div
@@ -288,14 +285,13 @@ T                           his plan costs $249.00/month
                     <span
                         class="fs-5 fw-bold position-absolute"
                         style="top: 28%; left: 44%"
-                        >300</span
+                        >10</span
                     >
                 </div>
                 <div>
                     <button
                         class="btn btn-warning w-100"
                         type="button"
-                        data-bs-toggle="modal" data-bs-target="#connectModal"
                     >
                         Continue
                     </button>
@@ -305,9 +301,9 @@ T                           his plan costs $249.00/month
         <div class="col-md-3 md-mb-0 mb-2">
             <div class="card rounded theme-border-main p-3">
                 <div>
-                    <h3 class="fs-5 fw-bold">Platinum</h3>
+                    <h3 class="fs-5 fw-bold">Free</h3>
                     <p class="fs-6 text-muted">
-                        This plan costs $499.00/month
+                        This plan costs $0.00/month
                     </p>
                 </div>
                 <div
@@ -324,14 +320,13 @@ T                           his plan costs $249.00/month
                     <span
                         class="fs-5 fw-bold position-absolute"
                         style="top: 28%; left: 44%"
-                        >700</span
+                        >10</span
                     >
                 </div>
                 <div>
                     <button
                         class="btn btn-warning w-100"
                         type="button"
-                        data-bs-toggle="modal" data-bs-target="#connectModal"
                     >
                         Continue
                     </button>
@@ -558,10 +553,11 @@ T                           his plan costs $249.00/month
             <div class="card rounded p-3">
                 <div class="theme-border-secondary p-3">
                     <h4 class="fs-5 fw-bold">Question</h4>
-                    <input type="text" class="form-control my-2 theme-border-secondary"
-                    id="questionInput" name="questionInput"
-                    placeholder="Type your question here">
-                    <input type="hidden" name="conversation" value="{{ conversation }}">
+                    <textarea
+                        class="form-control my-2 theme-border-secondary"
+                        rows="2"
+                        placeholder="Type your question here"
+                    ></textarea>
                     <div>
                         <button
                             class="btn btn-warning"
@@ -857,7 +853,19 @@ T                           his plan costs $249.00/month
                         <div class="row">
                             <div class="col-md-12">
                                 <form id="askQuestionForm">
-                                   
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-fw fa-rocket"></i>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" style="border-color: #F5D39D;"
+                                                id="questionInput" name="questionInput"
+                                                placeholder="Ask your question here">
+                                                <input type="hidden" name="conversation" value="{{ conversation }}">
+                                        </div>
+                                    </div>
                         
                                     <div class="row">
                                         <div class="col-3">
@@ -871,7 +879,7 @@ T                           his plan costs $249.00/month
                                     
                                         <div class="col-3">
                                             <!-- Button trigger modal -->
-                                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target=".bd-example-modal-sm">Feedback</button>
+                                            <button type="button" class="am-secondary-btn" data-toggle="modal" data-target=".bd-example-modal-sm">Feedback</button>
                                         </div>
                                         <div class="col-3">
                                             <button type="button" id="cancelTaskButton" style="display:none;" class="btn btn-primary btn-block">Cancel</button>
@@ -887,6 +895,8 @@ T                           his plan costs $249.00/month
                         <div class="row">
                             <div class="col-md-12" id="timer" class="alert alert-info text-center"></div>
                         </div>
+
+
                     </div>
                 </div>
             </div>
@@ -905,10 +915,12 @@ T                           his plan costs $249.00/month
                 <form id="submitFeedback">
                 <div class="modal-header">
                 <h5 class="modal-title" id="feedbackModal">Question feedback</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 </div>
                 <div class="modal-body">
-                    <div class="card bg-light p-3">
+                    <div class="col-md-5card bg-light">
                         {% call f.form_tag('gpt.main') %}
                             {% call f.form_group(feedback_form.question,
                                 placeholder='The question asked',
@@ -942,67 +954,6 @@ T                           his plan costs $249.00/month
             
             
                         <!-- End of modal code -->
-
-
-    <div class="modal fade" id="connectModal" tabindex="-1" aria-labelledby="connectModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<!-- Modal Header -->
-					<div class="modal-header border-0 mb-0 pb-0">
-						<h4 class="modal-title fw-bold" id="connectModalLabel">
-							Subscription
-						</h4>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-					</div>
-					<!-- Modal body -->
-					<div class="modal-body pt-1">
-						<p>This plan costs ---/month</p>
-						<form>
-							<div class="mb-3">
-								<label for="currentPassword" class="form-label fw-bold">Do you have a coupon code?</label>
-								<input type="number" class="form-control" id="currentPassword" placeholder="Write here">
-							</div>
-							<div class="mb-3">
-								<label for="email" class="form-label fw-bold">Name on card</label>
-								<input type="text" class="form-control" id="email" placeholder="Write here">
-							</div>
-							<div class="mb-3">
-								<label for="password" class="form-label fw-bold">Card number</label>
-								<input type="number" class="form-control" id="password" placeholder="Write here">
-							</div>
-                            <div class="d-flex justify-content-md-between">
-                            <p class="fw-bold">Expiration date</p>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <select class="form-select" id="selectYear" required>
-                                        <option value="" selected>Select Year</option>
-
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <select class="form-select" id="selectMonth" required>
-                                         <option value="" selected>Select Month</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3 offset-md-1">
-                                    <input type="text" class="form-control" id="cvcNumber" placeholder="CVC" required>
-                                </div>
-                            </div>
-						</form>
-						<div class="border-0 w-100 d-flex justify-content-between gap-3 align-items-center my-4">
-							<button type="button" class="btn btn-warning w-100">
-								Process payment
-							</button>
-							
-						</div>
-						<p class="text-center">
-							Protected by 128-bit SSL encryption
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
 
 
 
@@ -1039,50 +990,6 @@ T                           his plan costs $249.00/month
             });
         }
     </script> -->
-
-   
-    <script>
-        const currentYear = new Date().getFullYear();
-        const currentMonth = new Date().getMonth() + 1; // getMonth returns 0-based index
-        const selectYear = document.getElementById('selectYear');
-        const selectMonth = document.getElementById('selectMonth');
-
-        // Populate the year dropdown with upcoming years (up to 10 years in the future)
-        for (let i = 0; i <= 10; i++) {
-            const yearOption = document.createElement('option');
-            yearOption.value = currentYear + i;
-            yearOption.textContent = currentYear + i;
-            selectYear.appendChild(yearOption);
-        }
-
-        // Populate the month dropdown based on the selected year
-        function populateMonths(selectedYear) {
-            // Clear the current month options
-            selectMonth.innerHTML = '<option value="" selected>Select Month</option>';
-
-            // Determine if we're showing months for the current year or future years
-            const startMonth = selectedYear == currentYear ? currentMonth : 1;
-
-            // Array of month names
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-            // Populate the months
-            for (let i = startMonth; i <= 12; i++) {
-                const monthOption = document.createElement('option');
-                monthOption.value = i < 10 ? '0' + i : i; // Add leading zero for single digit months
-                monthOption.textContent = monthNames[i - 1];
-                selectMonth.appendChild(monthOption);
-            }
-        }
-
-        // Initial placeholder for months (without any actual month options)
-        selectMonth.innerHTML = '<option value="" selected>Select Month</option>';
-
-        // Update the month dropdown when the year is changed
-        selectYear.addEventListener('change', function() {
-            populateMonths(this.value);
-        });
-    </script>
 <script>
     function addConversation() {
         let conversationName = document.getElementById("conversation_name").value;
