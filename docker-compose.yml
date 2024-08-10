@@ -118,25 +118,6 @@ services:
             memory: "${DOCKER_WORKER_MEMORY:-0}"
       profiles: ["worker"]
 
-  # webpack:
-  #   build:
-  #     context: "."
-  #     target: "assets"
-  #     args:
-  #       - "UID=${UID:-1000}"
-  #       - "GID=${GID:-1000}"
-  #       - "NODE_ENV=${NODE_ENV:-production}"
-  #   command: "yarn run watch"
-  #   image: mattairnow/monstagpt:webpack
-  #   env_file:
-  #     - ".env"
-  #   profiles: ["assets"]
-  #   restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
-  #   stop_grace_period: "0"
-  #   tty: true
-  #   volumes:
-  #     - ".:/app"
-
   mail:
     image: "sj26/mailcatcher:v0.8.2"
     ports:
