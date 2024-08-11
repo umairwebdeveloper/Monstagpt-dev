@@ -558,24 +558,31 @@ T                           his plan costs $249.00/month
             <div class="card rounded p-3">
                 <div class="theme-border-secondary p-3">
                     <h4 class="fs-5 fw-bold">Question</h4>
-                    <input type="text" class="form-control my-2 theme-border-secondary"
-                    id="questionInput" name="questionInput"
-                    placeholder="Type your question here">
-                    <input type="hidden" name="conversation" value="{{ conversation }}">
-                    <div>
-                        <button
-                            class="btn btn-warning"
-                            type="button"
-                        >
-                            Ask question
-                        </button>
-                        <button
-                            class="btn btn-outline-warning ms-3"
-                            type="button"
-                        >
-                            Feedback
-                        </button>
-                    </div>
+                    <form id="askQuestionForm">
+                        <input type="text" class="form-control my-2 theme-border-secondary"
+                        id="questionInput" name="questionInput"
+                        placeholder="Type your question here">
+                        <input type="hidden" name="conversation" value="{{ conversation }}">
+                        <div>
+                            <button
+                                class="btn btn-warning"
+                                type="button"
+                                id="askQuestionButton" 
+                                disabled
+                            >
+                                Ask question
+                            </button>
+                            <button
+                                class="btn btn-outline-warning ms-3"
+                                type="button"
+                                data-toggle="modal" data-target=".bd-example-modal-sm"
+                            >
+                                Feedback
+                            </button>
+                            <button type="button" id="cancelTaskButton" style="display:none;" class="btn btn-primary ms-3">Cancel</button>
+                        </div>
+                         <div class="m-2" id="timer" class="alert alert-info text-center"></div>
+                    </form>
                 </div>
                 <hr
                     class="theme-border-secondary text-warning my-3"
@@ -585,46 +592,12 @@ T                           his plan costs $249.00/month
                         Suggested question
                     </h5>
                     <div class="p-tag-custom-striped">
-                        <p class="p-3 fw-bold m-0">
-                            What is the overall sentiment of
-                            user reviews for the latest game
-                            release of enter game name here?
-                        </p>
-                        <p class="p-3 fw-bold m-0">
-                            What is the overall sentiment of
-                            user reviews for the latest game
-                            release of enter game name here?
-                        </p>
-                        <p class="p-3 fw-bold m-0">
-                            What is the overall sentiment of
-                            user reviews for the latest game
-                            release of enter game name here?
-                        </p>
-                        <p class="p-3 fw-bold m-0">
-                            What is the overall sentiment of
-                            user reviews for the latest game
-                            release of enter game name here?
-                        </p>
-                        <p class="p-3 fw-bold m-0">
-                            What is the overall sentiment of
-                            user reviews for the latest game
-                            release of enter game name here?
-                        </p>
-                        <p class="p-3 fw-bold m-0">
-                            What is the overall sentiment of
-                            user reviews for the latest game
-                            release of enter game name here?
-                        </p>
-                        <p class="p-3 fw-bold m-0">
-                            What is the overall sentiment of
-                            user reviews for the latest game
-                            release of enter game name here?
-                        </p>
-                        <p class="p-3 fw-bold m-0">
-                            What is the overall sentiment of
-                            user reviews for the latest game
-                            release of enter game name here?
-                        </p>
+                        {% for question in suggested_questions %}
+                            <p class="p-3 fw-bold m-0">
+                               {{ question.question|default('No suggested question') }}
+                            </p>
+                        {% endfor %}
+                        
                     </div>
                 </div>
             </div>
@@ -856,36 +829,10 @@ T                           his plan costs $249.00/month
 
                         <div class="row">
                             <div class="col-md-12">
-                                <form id="askQuestionForm">
-                                   
-                        
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <button type="submit" id="askQuestionButton" disabled class="btn btn-primary btn-block custom-colour">
-                                                <img src="{{ static_url_for('static', filename='images/spinner.gif') }}"
-                                                    class="spinner"
-                                                    width="16" height="11" alt="Spinner"/>
-                                                Ask Question
-                                            </button>
-                                        </div>
-                                    
-                                        <div class="col-3">
-                                            <!-- Button trigger modal -->
-                                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target=".bd-example-modal-sm">Feedback</button>
-                                        </div>
-                                        <div class="col-3">
-                                            <button type="button" id="cancelTaskButton" style="display:none;" class="btn btn-primary btn-block">Cancel</button>
-                                        </div>
-                                        <div class="col-3">
-                                            <i id="thumbsUpButton" class="fa fa-thumbs-up align-bottom" role="button" style="display:none; cursor: pointer;"></i>
-                                        </div>
-                        
-                                    </div>  
-                                </form>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12" id="timer" class="alert alert-info text-center"></div>
+                           
                         </div>
                     </div>
                 </div>
