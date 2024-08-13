@@ -1,0 +1,176 @@
+/*
+Template Name: Admin Pro Admin
+Author: Wrappixel
+Email: niravjoshi87@gmail.com
+File: scss
+*/
+/*
+Template Name: Admin Pro Admin
+Author: Wrappixel
+Email: niravjoshi87@gmail.com
+File: scss
+*/
+/*Theme Colors*/
+/*bootstrap Color*/
+/*Light colors*/
+/*Normal Color*/
+/*Extra Variable*/
+/*******************
+/*Top bar
+*******************/
+.topbar {
+  background: #ffffff;
+}
+.topbar .navbar-header {
+  background: #ffffff;
+}
+.topbar .top-navbar .navbar-header .navbar-brand .light-logo {
+  display: none;
+  color: rgba(0, 0, 0, 0.7);
+}
+.topbar .navbar-light .navbar-nav .nav-item > a.nav-link {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+.topbar .navbar-light .navbar-nav .nav-item > a.nav-link:hover,
+.topbar .navbar-light .navbar-nav .nav-item > a.nav-link:focus {
+  color: black !important;
+}
+
+/*******************
+/*General Elements
+*******************/
+a.link:hover,
+a.link:focus {
+  color: #4fb5ef !important;
+}
+
+.bg-theme {
+  background-color: #4fb5ef !important;
+}
+
+.bg-theme-light {
+  background-color: #a6cee5 !important;
+}
+
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+  background-color: #4fb5ef;
+  border-color: #4fb5ef;
+}
+
+.right-sidebar .rpanel-title {
+  background: #4fb5ef;
+}
+
+.stylish-table tbody tr:hover,
+.stylish-table tbody tr.active {
+  border-left: 4px solid #4fb5ef;
+}
+
+.text-themecolor {
+  color: #4fb5ef !important;
+}
+
+.profile-tab li a.nav-link.active,
+.customtab li a.nav-link.active {
+  border-bottom: 2px solid #4fb5ef;
+  color: #4fb5ef;
+}
+
+.profile-tab li a.nav-link:hover,
+.customtab li a.nav-link:hover {
+  color: #4fb5ef;
+}
+
+/*******************
+/*Buttons
+*******************/
+.btn-themecolor,
+.btn-themecolor.disabled {
+  background: #4fb5ef;
+  color: #ffffff;
+  border: 1px solid #4fb5ef;
+}
+.btn-themecolor:hover,
+.btn-themecolor.disabled:hover {
+  background: #4fb5ef;
+  opacity: 0.7;
+  border: 1px solid #4fb5ef;
+}
+.btn-themecolor.active,
+.btn-themecolor:focus,
+.btn-themecolor.disabled.active,
+.btn-themecolor.disabled:focus {
+  background: #028ee1;
+}
+
+/*******************
+/*sidebar navigation
+*******************/
+.label-themecolor {
+  background: #4fb5ef;
+}
+
+.sidebar-nav > ul > li.active > a {
+  color: #4fb5ef;
+  border-color: #4fb5ef;
+}
+.sidebar-nav > ul > li.active > a i {
+  color: #4fb5ef;
+}
+
+.sidebar-nav ul li a.active,
+.sidebar-nav ul li a:hover {
+  color: #4fb5ef;
+}
+.sidebar-nav ul li a.active i,
+.sidebar-nav ul li a:hover i {
+  color: #4fb5ef;
+}
+
+.sidebar-nav > ul > li > a i {
+  color: #787f91;
+}
+
+.theme-border-main {
+  border: 1px solid #4fb5ef !important;
+  border-radius: 8px !important;
+}
+
+.theme-border-secondary {
+  border: 1px solid #ffe38a !important;
+  border-radius: 8px !important;
+}
+
+.theme-border-secondary-b {
+  border-bottom: 1px solid #ffe38a !important;
+}
+
+.custom-table-striped tbody tr:nth-of-type(odd) {
+  background-color: #e5f0f6 !important;
+}
+
+.p-tag-custom-striped p:nth-of-type(odd) {
+  background-color: #fff2c9 !important;
+}
+
+.bg-theme-light-secondary {
+  background-color: #e5f0f6 !important;
+}
+
+.bg-theme-light-warning {
+  background-color: #fff2c950 !important;
+}
+
+#display_apps_table tbody tr td:last-child {
+  border: 0 !important;
+}
+
+
+.cursor-pointer {
+  cursor: pointer;
+}
